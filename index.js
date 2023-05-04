@@ -1,9 +1,13 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
 
+global.__basedir = __dirname;
+
 //middlewares
+app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
