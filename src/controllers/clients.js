@@ -25,8 +25,8 @@ const getClient = async (req, res) => {
 }
 
 const updateClient = async (req, res) => {
-    const { id, codigoPostal, correo, domicilio, domicilioCobranza, estadoCivil, fechaDesde, fechaNacimiento, localidad, municipio, nombre, ocupacion, referenciaDomicilioCobranza, telefono, telefonoCobranza } = req.body;
-    const response = await connection.query(`UPDATE clientes SET codigoPostal = '${codigoPostal}', correo = '${correo}', domicilio = '${domicilio}', domicilioCobranza = '${domicilioCobranza}', estadoCivil = '${estadoCivil}', fechaDesde = '${fechaDesde}', fechaNacimiento = '${fechaNacimiento}', localidad = '${localidad}', municipio = '${municipio}', nombre = '${nombre}', ocupacion = '${ocupacion}', referenciaDomicilioCobranza = '${referenciaDomicilioCobranza}', telefono = '${telefono}', telefonoCobranza = '${telefonoCobranza}' WHERE id = ${id}`, function (err, rows) {
+    const { id, codigoPostal, correo, domicilio, domicilioCobranza, estadoCivil, fechaDesde, fechaNacimiento, localidad, municipio, estado, nombre, ocupacion, referenciaDomicilioCobranza, telefono, telefonoCobranza } = req.body;
+    const response = await connection.query(`UPDATE clientes SET codigoPostal = '${codigoPostal}', correo = '${correo}', estado = '${estado}', domicilio = '${domicilio}', domicilioCobranza = '${domicilioCobranza}', estadoCivil = '${estadoCivil}', fechaDesde = '${fechaDesde}', fechaNacimiento = '${fechaNacimiento}', localidad = '${localidad}', municipio = '${municipio}', nombre = '${nombre}', ocupacion = '${ocupacion}', referenciaDomicilioCobranza = '${referenciaDomicilioCobranza}', telefono = '${telefono}', telefonoCobranza = '${telefonoCobranza}' WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -40,8 +40,8 @@ const updateClient = async (req, res) => {
 }
 
 const createClient = async (req, res) => {
-    const { codigoPostal, correo, domicilio, domicilioCobranza, estadoCivil, fechaDesde, fechaNacimiento, localidad, municipio, nombre, ocupacion, referenciaDomicilioCobranza, telefono, telefonoCobranza } = req.body;
-    const response = await connection.query(`INSERT INTO clientes (codigoPostal, correo, domicilio, domicilioCobranza, estadoCivil, fechaDesde, fechaNacimiento, localidad, municipio, nombre, ocupacion, referenciaDomicilioCobranza, telefono, telefonoCobranza) VALUES ('${codigoPostal}', '${correo}', '${domicilio}', '${domicilioCobranza}', '${estadoCivil}', '${fechaDesde}', '${fechaNacimiento}', '${localidad}', '${municipio}', '${nombre}', '${ocupacion}', '${referenciaDomicilioCobranza}', '${telefono}', '${telefonoCobranza}')`, function (err, rows) {
+    const { codigoPostal, correo, domicilio, domicilioCobranza, estadoCivil, fechaDesde, estado, fechaNacimiento, localidad, municipio, nombre, ocupacion, referenciaDomicilioCobranza, telefono, telefonoCobranza } = req.body;
+    const response = await connection.query(`INSERT INTO clientes (codigoPostal, correo, domicilio, domicilioCobranza, estadoCivil, fechaDesde, fechaNacimiento, localidad, municipio, estado, nombre, ocupacion, referenciaDomicilioCobranza, telefono, telefonoCobranza) VALUES ('${codigoPostal}', '${correo}', '${domicilio}', '${domicilioCobranza}', '${estadoCivil}', '${fechaDesde}', '${fechaNacimiento}', '${localidad}', '${municipio}', '${estado}',  '${nombre}', '${ocupacion}', '${referenciaDomicilioCobranza}', '${telefono}', '${telefonoCobranza}')`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
