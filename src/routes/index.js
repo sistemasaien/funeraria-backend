@@ -59,6 +59,7 @@ const { importData, getLastId } = require('../controllers/imports');
 const { getBranchs, getBranch, updateBranch, createBranch, deleteBranch } = require('../controllers/branchs');
 const { getCalls, createCall, getCallsByEmployee, getCallsByEmployeeAndType } = require('../controllers/callcenter');
 const { getWays, getWay, updateWay, createWay, deleteWay, deleteSalesWays, insertMassiveSalesWays, createSalesWays, getLastOrder, substractOrder } = require('../controllers/ways');
+const { getDepartment, getDepartments, updateDepartment, createDepartment, deleteDepartment } = require('../controllers/departments');
 
 //Generic
 router.post('/genericDelete', genericDelete);
@@ -209,5 +210,12 @@ router.post('/insertMassiveSalesWays', insertMassiveSalesWays);
 router.post('/deleteSalesWays', deleteSalesWays);
 router.get('/getLastOrder/:id', getLastOrder);
 router.post('/substractOrder', substractOrder);
+
+//Departments
+router.get('/departments', getDepartments);
+router.get('/getDepartment/:id', getDepartment);
+router.post('/updateDepartment', updateDepartment);
+router.post('/createDepartment', createDepartment);
+router.post('/deleteDepartment', deleteDepartment);
 
 module.exports = router;
