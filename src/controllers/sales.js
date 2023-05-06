@@ -171,7 +171,9 @@ const getFinancing = async (req, res) => {
 
 const createFinancing = async (req, res) => {
     const { idCliente, medioPago, precioBase, bonificacion, enganche, montoFinanciado, numeroPagos, interesMora, periodo, importeCuota, importeTotal, importePendiente, importeAbonado, fechaPrimerCuota, fechaUltimaCuota } = req.body;
-    const response = await connection.query(`INSERT INTO financiamientos (idCliente, medioPago, precioBase, bonificacion, enganche, montoFinanciado, numeroPagos, interesMora, periodo, importeCuota, importeTotal, importePendiente, importeAbonado, fechaPrimerCuota, fechaUltimaCuota) VALUES ('${idCliente}', '${medioPago}', '${precioBase}', '${bonificacion}', '${enganche}', '${montoFinanciado}', '${numeroPagos}', '${interesMora}', '${periodo}', '${importeCuota}', '${importeTotal}', '${importePendiente}', '${importeAbonado}', '${fechaPrimerCuota}', '${fechaUltimaCuota}')`, async function (err, rows) {
+    const atraso = req.body?.atraso;
+    const adelanto = req.body?.adelanto;
+    const response = await connection.query(`INSERT INTO financiamientos (idCliente, medioPago, precioBase, bonificacion, enganche, montoFinanciado, numeroPagos, interesMora, periodo, importeCuota, importeTotal, importePendiente, importeAbonado, atraso, adelanto, fechaPrimerCuota, fechaUltimaCuota) VALUES ('${idCliente}', '${medioPago}', '${precioBase}', '${bonificacion}', '${enganche}', '${montoFinanciado}', '${numeroPagos}', '${interesMora}', '${periodo}', '${importeCuota}', '${importeTotal}', '${importePendiente}', '${importeAbonado}', '${atraso}', '${adelanto}', '${fechaPrimerCuota}', '${fechaUltimaCuota}')`, async function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -186,7 +188,9 @@ const createFinancing = async (req, res) => {
 
 const updateFinancing = async (req, res) => {
     const { id, idCliente, medioPago, precioBase, bonificacion, enganche, montoFinanciado, numeroPagos, interesMora, periodo, importeCuota, importeTotal, importePendiente, importeAbonado, fechaPrimerCuota, fechaUltimaCuota } = req.body;
-    const response = await connection.query(`UPDATE financiamientos SET idCliente = '${idCliente}', medioPago = '${medioPago}', precioBase = '${precioBase}', bonificacion = '${bonificacion}', enganche = '${enganche}', montoFinanciado = '${montoFinanciado}', numeroPagos = '${numeroPagos}', interesMora = '${interesMora}', periodo = '${periodo}', importeCuota = '${importeCuota}', importeTotal = '${importeTotal}', importePendiente = '${importePendiente}', importeAbonado = '${importeAbonado}', fechaPrimerCuota = '${fechaPrimerCuota}', fechaUltimaCuota = '${fechaUltimaCuota}' WHERE id = ${id}`, function (err, rows) {
+    const atraso = req.body?.atraso;
+    const adelanto = req.body?.adelanto;
+    const response = await connection.query(`UPDATE financiamientos SET idCliente = '${idCliente}', medioPago = '${medioPago}', precioBase = '${precioBase}', bonificacion = '${bonificacion}', enganche = '${enganche}', montoFinanciado = '${montoFinanciado}', numeroPagos = '${numeroPagos}', interesMora = '${interesMora}', periodo = '${periodo}', importeCuota = '${importeCuota}', importeTotal = '${importeTotal}', importePendiente = '${importePendiente}', importeAbonado = '${importeAbonado}', atraso = '${atraso}', adelanto = '${adelanto}', fechaPrimerCuota = '${fechaPrimerCuota}', fechaUltimaCuota = '${fechaUltimaCuota}' WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -521,25 +525,36 @@ const getPayment = async (req, res) => {
 }
 
 const createMassivePayment = async (req, res) => {
-    const { idFinanciamiento, nroCuotas, importeCuota, enganche, fechaPrimerCuota, periodo, montoUltimaCuota } = req.body;
+    const { idFinanciamiento, nroCuotas, importeCuota, enganche, fechaPrimerCuota, periodo, montoUltimaCuota, adelanto, fechaInicio, tipo } = req.body;
 
     //schema:  	id 	idFinanciamiento 	nroCuota 	fecha 	valor 	tipo 	descripcion 	estado
     const values = [];
     let actualDate = null;
     actualDate = new Date(fechaPrimerCuota);
     if (enganche) {
-        values.push(`(${idFinanciamiento}, 0, '${fechaPrimerCuota}', ${enganche}, 'Enganche', 'Enganche', 'Pagado', ${enganche}, 0)`);
+        values.push(`(${idFinanciamiento}, 0, '${fechaInicio}', ${enganche}, 'Enganche', 'Enganche', 'Pagado', ${enganche}, 0)`);
+    }
+    if (adelanto) {
+        values.push(`(${idFinanciamiento}, 0, '${fechaInicio}', ${adelanto}, 'Adelanto', 'Adelanto', 'Pagado', ${adelanto}, 0)`);
     }
 
-    for (let i = 0; i < nroCuotas; i++) {
-        let cuota = i + 1;
-        actualDate = addDays(fechaPrimerCuota, periodo * cuota);
-        let tipo = 'Cuota';
-        if (i + 1 === nroCuotas && montoUltimaCuota) {
-            values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${montoUltimaCuota}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pendiente', 0, ${importeCuota})`);
-        } else {
-            values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${importeCuota}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pendiente', 0 , ${importeCuota})`);
+    if (tipo === 'Crédito') {
+        for (let i = 0; i < nroCuotas; i++) {
+            let cuota = i + 1;
+            if (i !== 0) {
+                actualDate = addDays(fechaPrimerCuota, periodo * cuota);
+            } else {
+                actualDate = fechaPrimerCuota;
+            }
+            let tipo = 'Cuota';
+            if (i + 1 === nroCuotas && montoUltimaCuota) {
+                values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${montoUltimaCuota}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pendiente', 0, ${montoUltimaCuota})`);
+            } else {
+                values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${importeCuota}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pendiente', 0 , ${importeCuota})`);
+            }
         }
+    } else {
+        values.push(`(${idFinanciamiento}, 1, '${fechaPrimerCuota}', ${importeCuota}, 'Contado', 'Cuota 1/1', 'Pendiente', 0, ${importeCuota})`);
     }
 
     const response = await connection.query(`INSERT INTO cobranzas (idFinanciamiento, nroCuota, fecha, valor, tipo, descripcion, estado, importePago, importePendiente) VALUES ${values.join(',')}`, async function (err, rows) {
@@ -548,6 +563,21 @@ const createMassivePayment = async (req, res) => {
         } else {
             if (rows?.affectedRows > 0) {
                 res.status(200).send({ message: 'Venta creada correctamente', success: true, lastDate: actualDate });
+            } else {
+                res.status(200).send({ message: 'Ocurrió un error', success: false });
+            }
+        }
+    });
+}
+
+const updateCashPayment = async (req, res) => {
+    const { idFinanciamiento, fecha } = req.body;
+    const response = await connection.query(`UPDATE cobranzas SET fecha = '${fecha}' WHERE idFinanciamiento = ${idFinanciamiento} AND tipo = 'Contado'`, async function (err, rows) {
+        if (err) {
+            res.status(409).send(err);
+        } else {
+            if (rows?.affectedRows > 0) {
+                res.status(200).send({ message: 'Pago actualizado correctamente', success: true });
             } else {
                 res.status(200).send({ message: 'Ocurrió un error', success: false });
             }
@@ -640,7 +670,8 @@ module.exports = {
     getBeneficiaries,
     updateFinishDate,
     getCompleteContract,
-    updateSalesWithWay
+    updateSalesWithWay,
+    updateCashPayment
 }
 
 

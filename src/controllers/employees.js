@@ -1,9 +1,14 @@
 const { connection } = require('../controllers');
 
 const getEmployees = async (req, res) => {
-    const response = await connection.query(`SELECT e.*, s.nombre nombreSucursal FROM empleados e
+    const response = await connection.query(`SELECT e.*, s.nombre nombreSucursal, d.nombre departamento, r.nombre recorrido FROM empleados e
     left join sucursales s
-    ON e.sucursal = s.id`, function (err, rows) {
+    on e.sucursal = s.id
+    left join departamentos d
+    on e.departamento = d.id
+    left join recorridos r
+    on e.recorrido = r.id
+    `, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {

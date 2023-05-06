@@ -36,6 +36,7 @@ const createCall = async (req, res) => {
     const lugarFallecimiento = req.body?.lugarFallecimiento || null;
     const fechaFallecimiento = req.body?.fechaFallecimiento || null;
     const idSucursal = req.body?.idSucursal || null;
+    const fechaAgenda = req.body?.fechaAgenda || null;
 
     //query with not null fields
     let query = `INSERT INTO callcenter (`;
@@ -119,6 +120,10 @@ const createCall = async (req, res) => {
     if (fechaFallecimiento) {
         query += `fechaFallecimiento,`;
         values += `'${fechaFallecimiento}',`;
+    }
+    if (fechaAgenda) {
+        query += `fechaAgenda,`;
+        values += `'${fechaAgenda}',`;
     }
     query = query.slice(0, -1);
     values = values.slice(0, -1);
