@@ -8,11 +8,12 @@ const register = async (req, res) => {
     const response = await connection.query(`INSERT INTO users (username, password, role, phone, mail, name) VALUES ('${username}', '${password}', ${2}, '${phone}', '${mail}', '${name}')`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.affectedRows > 0) {
-            res.status(200).send({ message: 'Usuario registrado correctamente', success: true });
         } else {
-            res.status(200).send({ message: 'Ocurrió un error', success: false });
+            if (rows?.affectedRows > 0) {
+                res.status(200).send({ message: 'Usuario registrado correctamente', success: true });
+            } else {
+                res.status(200).send({ message: 'Ocurrió un error', success: false });
+            }
         }
     });
 }
@@ -73,9 +74,9 @@ const getRequests = async (req, res) => {
     LEFT JOIN paquetes p ON p.id = s.idPaquete ORDER BY ID DESC`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
+        } else {
+            res.status(200).send(rows);
         }
-
-        res.status(200).send(rows);
     });
 }
 
@@ -86,10 +87,10 @@ const insertRequest = async (req, res) => {
     const response = await connection.query(`INSERT INTO solicitudes (data, date) VALUES ('${data}', '${parsedDate}')`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
+        } else {
+            res.status(200).send('ok');
         }
     });
-
-    res.status(200).send('ok');
 }
 
 const getPermissionsByProfile = async (req, res) => {
@@ -106,11 +107,14 @@ const getPermissionsByProfile = async (req, res) => {
 const updatePermissions = async (req, res) => {
     const { profile, permissions } = req.body;
     let query = `DELETE FROM permisos WHERE idPerfil = '${profile}';`;
+    let isOk = true;
     await connection.query(query, function (err, rows) {
         if (err) {
+            isOk = false;
             res.status(409).send(err);
         }
     });
+    if (!isOk) return;
     query = 'INSERT INTO permisos (permiso, idPerfil, tipo) VALUES'
     permissions.forEach((permission) => {
         query += `('${permission.permiso}', '${profile}', '${permission.tipo}'),`;
@@ -134,11 +138,12 @@ const deleteContract = async (req, res) => {
     const response = await connection.query(`DELETE FROM contratos WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.affectedRows > 0) {
-            res.status(200).send({ message: 'Contrato eliminado correctamente', success: true });
         } else {
-            res.status(200).send({ message: 'No se encontró el contrato', success: false });
+            if (rows?.affectedRows > 0) {
+                res.status(200).send({ message: 'Contrato eliminado correctamente', success: true });
+            } else {
+                res.status(200).send({ message: 'No se encontró el contrato', success: false });
+            }
         }
     });
 }
@@ -148,11 +153,12 @@ const deleteRequest = async (req, res) => {
     const response = await connection.query(`DELETE FROM solicitudes WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.affectedRows > 0) {
-            res.status(200).send({ message: 'Solicitud eliminada correctamente', success: true });
         } else {
-            res.status(200).send({ message: 'No se encontró la solicitud', success: false });
+            if (rows?.affectedRows > 0) {
+                res.status(200).send({ message: 'Solicitud eliminada correctamente', success: true });
+            } else {
+                res.status(200).send({ message: 'No se encontró la solicitud', success: false });
+            }
         }
     });
 }
@@ -246,8 +252,7 @@ const genericGet = async (req, res) => {
         if (rows) {
             if (rows?.length > 0) {
                 res.status(200).send({ rows: rows, success: true });
-            }
-            else {
+            } else {
                 res.status(200).send({ message: 'No se encontraron datos', success: false });
             }
         } else {

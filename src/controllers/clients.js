@@ -15,11 +15,12 @@ const getClient = async (req, res) => {
     const response = await connection.query(`SELECT * FROM clientes WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró el cliente', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró el cliente', success: false });
+            }
         }
     });
 }

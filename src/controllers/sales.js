@@ -42,11 +42,12 @@ const getBeneficiary = async (req, res) => {
     const response = await connection.query(`SELECT * FROM beneficiarios WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró el beneficiario', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró el beneficiario', success: false });
+            }
         }
     });
 }
@@ -99,11 +100,12 @@ const getService = async (req, res) => {
     const response = await connection.query(`SELECT * FROM servicios WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró el servicio', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró el servicio', success: false });
+            }
         }
     });
 }
@@ -157,11 +159,12 @@ const getFinancing = async (req, res) => {
     const response = await connection.query(`SELECT * FROM financiamientos WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró el financiamiento', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró el financiamiento', success: false });
+            }
         }
     });
 }
@@ -204,11 +207,12 @@ const getDeceased = async (req, res) => {
     const response = await connection.query(`SELECT * FROM fallecidos WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró el fallecido', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró el fallecido', success: false });
+            }
         }
     });
 }
@@ -261,11 +265,12 @@ const getCeremony = async (req, res) => {
     const response = await connection.query(`SELECT * FROM ceremonias WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró la ceremonia', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró la ceremonia', success: false });
+            }
         }
     });
 }
@@ -318,11 +323,12 @@ const getRequest = async (req, res) => {
     const response = await connection.query(`SELECT * FROM solicitudes WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró la solicitud', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró la solicitud', success: false });
+            }
         }
     });
 }
@@ -365,11 +371,12 @@ const getContract = async (req, res) => {
     const response = await connection.query(`SELECT * FROM contratos WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró el contrato', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró el contrato', success: false });
+            }
         }
     });
 }
@@ -444,11 +451,12 @@ const getSale = async (req, res) => {
     const response = await connection.query(`SELECT * FROM ventas WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró la venta', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró la venta', success: false });
+            }
         }
     });
 }
@@ -502,11 +510,12 @@ const getPayment = async (req, res) => {
     const response = await connection.query(`SELECT * FROM cobranza WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró la cobranza', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró la cobranza', success: false });
+            }
         }
     });
 }
@@ -573,11 +582,12 @@ const getCompleteContract = async (req, res) => {
     WHERE con.id = ${id}`, async function (err, rows) {
         if (err) {
             res.status(409).send(err);
-        }
-        if (rows?.length > 0) {
-            res.status(200).send(rows[0]);
         } else {
-            res.status(200).send({ message: 'No se encontró el contrato', success: false });
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró el contrato', success: false });
+            }
         }
     });
 }
