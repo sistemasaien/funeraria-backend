@@ -1,7 +1,7 @@
 const { connection } = require('../controllers');
 
 const getEmployees = async (req, res) => {
-    const response = await connection.query(`SELECT e.*, s.nombre nombreSucursal, d.nombre departamento, r.nombre recorrido FROM empleados e
+    const response = await connection.query(`SELECT e.*, s.nombre nombreSucursal, d.nombre departamento, r.nombre nombreRecorrido FROM empleados e
     left join sucursales s
     on e.sucursal = s.id
     left join departamentos d
