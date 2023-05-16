@@ -526,6 +526,29 @@ const getPayment = async (req, res) => {
 
 const createMassivePayment = async (req, res) => {
     const { idFinanciamiento, nroCuotas, importeCuota, enganche, fechaPrimerCuota, periodo, montoUltimaCuota, adelanto, fechaInicio, tipo } = req.body;
+    const importeAbonado = req?.body?.importeAbonado || 0;
+    let cuotasPagas = 0;
+    let nroCuotaIncompleta = 0;
+    let importeRestante = importeAbonado;
+    let importePagado = 0;
+    if (importeAbonado > 0) {
+        if (importeAbonado < importeCuota) {
+            cuotasPagas = 1;
+            importeRestante = importeCuota - importeAbonado;
+            nroCuotaIncompleta = 1;
+            importePagado = importeAbonado;
+        } else {
+            //int without decimals
+            cuotasPagas = Math.trunc(importeAbonado / importeCuota);
+            let resto = importeAbonado % importeCuota;
+            if (resto > 0) {
+                cuotasPagas = cuotasPagas + 1;
+                nroCuotaIncompleta = cuotasPagas;
+                importeRestante = importeCuota - resto;
+                importePagado = resto;
+            }
+        }
+    }
 
     //schema:  	id 	idFinanciamiento 	nroCuota 	fecha 	valor 	tipo 	descripcion 	estado
     const values = [];
@@ -548,9 +571,26 @@ const createMassivePayment = async (req, res) => {
             }
             let tipo = 'Cuota';
             if (i + 1 === nroCuotas && montoUltimaCuota) {
-                values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${montoUltimaCuota}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pendiente', 0, ${montoUltimaCuota})`);
+                if (cuota <= cuotasPagas) {
+                    if (nroCuotaIncompleta === i + 1) {
+                        values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${nroCuotaIncompleta}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pagado', ${importePagado}, ${importeRestante})`);
+                    } else {
+                        values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${montoUltimaCuota}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pagado', ${montoUltimaCuota}, 0)`);
+                    }
+                } else {
+                    values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${montoUltimaCuota}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pendiente', 0, ${montoUltimaCuota})`);
+                }
             } else {
-                values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${importeCuota}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pendiente', 0 , ${importeCuota})`);
+                if (cuota <= cuotasPagas) {
+                    if (nroCuotaIncompleta === i + 1) {
+                        values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${importeRestante}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pagado', ${importePagado} , ${importeRestante})`);
+                    }
+                    else {
+                        values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${importeCuota}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pagado', ${importeCuota}, 0)`);
+                    }
+                } else {
+                    values.push(`(${idFinanciamiento}, ${cuota}, '${actualDate}', ${importeCuota}, '${tipo}', 'Cuota ${cuota}/${nroCuotas}', 'Pendiente', 0 , ${importeCuota})`);
+                }
             }
         }
     } else {
