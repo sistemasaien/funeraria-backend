@@ -674,30 +674,54 @@ const updateSalesWithWay = async (req, res) => {
 }
 
 const createPayment = async (req, res) => {
-    const { id, fecha, valor, importePago, observacion, importePendiente, idContrato } = req.body;
+    const { id, fecha, valor, importePago, observacion, importePendiente, idContrato, importeAbonado, atraso } = req.body;
     let importePendienteCuota = valor - importePago;
+    let nuevoImportePendiente = importePendiente - importePago;
+    let nuevoImporteAbonado = importeAbonado + importePago;
+    const queryPago = `UPDATE cobranzas SET importePago = ${importePago}, importePendiente = ${importePendienteCuota}, estado = 'Pagado', fechaPago = '${fecha}', observaciones = '${observacion}' WHERE id = ${id}`;
+    let queryFinanciamiento = '';
+    let nuevoAtraso = 0;
+    if (importePago < valor) {
+        nuevoAtraso = atraso + (valor - importePago);
+    } else if (importePago > valor) {
+        nuevoAtraso = atraso - (importePago - valor);
+    } else {
+        nuevoAtraso = atraso;
+    }
+    queryFinanciamiento = `UPDATE financiamientos SET importeAbonado = ${nuevoImporteAbonado}, importePendiente = ${nuevoImportePendiente}, atraso = ${nuevoAtraso} WHERE idContrato = ${idContrato}`;
     if (importePago >= importePendiente) {
-        //update contrato with estado = "Liquidado"
         const response = await connection.query(`UPDATE contratos SET estado = 'Liquidado' WHERE id = ${idContrato}`, async function (err, rows) {
             if (err) {
                 res.status(409).send(err);
             } else {
-                const response2 = await connection.query(`UPDATE cobranzas SET importePago = ${importePago}, importePendiente = ${importePendienteCuota}, estado = 'Pagado', fechaPago = '${fecha}', observaciones = '${observacion}' WHERE id = ${id}`, async function (err, rows) {
+                const response2 = await connection.query(queryPago, async function (err, rows) {
                     if (err) {
                         res.status(409).send(err);
                     }
                     else {
-                        res.status(200).send({ message: 'Pago realizado correctamente', success: true });
+                        const response3 = await connection.query(queryFinanciamiento, async function (err, rows) {
+                            if (err) {
+                                res.status(409).send(err);
+                            } else {
+                                res.status(200).send({ message: 'Pago realizado correctamente', success: true });
+                            }
+                        });
                     }
                 });
             }
         });
     } else {
-        const response = await connection.query(`UPDATE cobranzas SET importePago = ${importePago}, importePendiente = ${importePendienteCuota}, estado = 'Pagado', fechaPago = '${fecha}', observaciones = '${observacion}' WHERE id = ${id}`, async function (err, rows) {
+        const response = await connection.query(queryPago, async function (err, rows) {
             if (err) {
                 res.status(409).send(err);
             } else {
-                res.status(200).send({ message: 'Pago realizado correctamente', success: true });
+                const response3 = await connection.query(queryFinanciamiento, async function (err, rows) {
+                    if (err) {
+                        res.status(409).send(err);
+                    } else {
+                        res.status(200).send({ message: 'Pago realizado correctamente', success: true });
+                    }
+                });
             }
         });
     }
