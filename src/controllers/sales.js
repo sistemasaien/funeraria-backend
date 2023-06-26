@@ -673,6 +673,38 @@ const updateSalesWithWay = async (req, res) => {
     });
 }
 
+const createPayment = async (req, res) => {
+    const { id, fecha, valor, importePago, observacion, importePendiente, idContrato } = req.body;
+    let importePendienteCuota = valor - importePago;
+    if (importePago >= importePendiente) {
+        //update contrato with estado = "Liquidado"
+        const response = await connection.query(`UPDATE contratos SET estado = 'Liquidado' WHERE id = ${idContrato}`, async function (err, rows) {
+            if (err) {
+                res.status(409).send(err);
+            } else {
+                const response2 = await connection.query(`UPDATE cobranzas SET importePago = ${importePago}, importePendiente = ${importePendienteCuota}, estado = 'Pagado', fechaPago = '${fecha}', observaciones = '${observacion}' WHERE id = ${id}`, async function (err, rows) {
+                    if (err) {
+                        res.status(409).send(err);
+                    }
+                    else {
+                        res.status(200).send({ message: 'Pago realizado correctamente', success: true });
+                    }
+                });
+            }
+        });
+    } else {
+        const response = await connection.query(`UPDATE cobranzas SET importePago = ${importePago}, importePendiente = ${importePendienteCuota}, estado = 'Pagado', fechaPago = '${fecha}', observaciones = '${observacion}' WHERE id = ${id}`, async function (err, rows) {
+            if (err) {
+                res.status(409).send(err);
+            } else {
+                res.status(200).send({ message: 'Pago realizado correctamente', success: true });
+            }
+        });
+    }
+}
+
+
+
 module.exports = {
     updateContractNumber,
     getBeneficiary,
@@ -711,7 +743,8 @@ module.exports = {
     updateFinishDate,
     getCompleteContract,
     updateSalesWithWay,
-    updateCashPayment
+    updateCashPayment,
+    createPayment
 }
 
 

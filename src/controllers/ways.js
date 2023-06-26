@@ -142,6 +142,31 @@ const substractOrder = async (req, res) => {
     });
 }
 
+const getCompleteWay = async (req, res) => {
+    const { id } = req.params;
+    const query = `SELECT nombre_cliente, direccion_cliente, fecha, valor, orden, id_venta, id_cuota, importePendiente, id_contrato, id_cliente, periodo, nroCuota
+    FROM (
+      SELECT c.nombre AS nombre_cliente, c.domicilio AS direccion_cliente, c.id AS id_cliente, co.fecha, co.valor, rv.orden, v.id AS id_venta, co.id AS id_cuota, co.nroCuota, f.periodo, f.importePendiente, f.idContrato AS id_contrato,
+             ROW_NUMBER() OVER (PARTITION BY v.id ORDER BY co.fecha ASC) AS row_num
+      FROM clientes c
+      JOIN ventas v ON c.id = v.idCliente
+      JOIN recorridos_ventas rv ON v.id = rv.idVenta
+      JOIN cobranzas co ON v.idFinanciamiento = co.idFinanciamiento
+      JOIN financiamientos f ON f.id = v.idFinanciamiento
+      WHERE co.estado = 'Pendiente' AND rv.idRecorrido = ${id}
+      ORDER BY rv.orden 
+    ) subquery
+    WHERE row_num = 1;`
+
+    const response = await connection.query(query, function (err, rows) {
+        if (err) {
+            res.status(409).send(err);
+        } else {
+            res.status(200).send({ wayData: rows, success: true });
+        }
+    });
+}
+
 module.exports = {
     getWays,
     getWay,
@@ -152,5 +177,6 @@ module.exports = {
     createSalesWays,
     insertMassiveSalesWays,
     getLastOrder,
-    substractOrder
+    substractOrder,
+    getCompleteWay,
 }

@@ -9,7 +9,6 @@ const upload = multer({
     },
 })
 
-
 const router = Router();
 const { getLogo, genericGet, genericDelete, genericUpdate, createProfile, getCompanyData, updateCompanyData, createCompanyData, uploadLogo, deleteContract, getProfiles, updatePermissions, getUserPermissions, getPermissionsByProfile, deleteRequest, login, register, getRequests, insertRequest } = require('../controllers');
 const { getClients, getClient, updateClient, createClient, deleteClient } = require('../controllers/clients');
@@ -53,13 +52,14 @@ const { updateContractNumber,
     updateFinishDate,
     getCompleteContract,
     updateSalesWithWay,
-    updateCashPayment
+    updateCashPayment,
+    createPayment
 } = require('../controllers/sales');
 
 const { importData, getLastId } = require('../controllers/imports');
 const { getBranchs, getBranch, updateBranch, createBranch, deleteBranch } = require('../controllers/branchs');
 const { getCalls, createCall, getCallsByEmployee, getCallsByEmployeeAndType } = require('../controllers/callcenter');
-const { getWays, getWay, updateWay, createWay, deleteWay, deleteSalesWays, insertMassiveSalesWays, createSalesWays, getLastOrder, substractOrder } = require('../controllers/ways');
+const { getWays, getCompleteWay, getWay, updateWay, createWay, deleteWay, deleteSalesWays, insertMassiveSalesWays, createSalesWays, getLastOrder, substractOrder } = require('../controllers/ways');
 const { getDepartment, getDepartments, updateDepartment, createDepartment, deleteDepartment } = require('../controllers/departments');
 
 //Generic
@@ -132,6 +132,8 @@ router.post('/updateSalesWithWay', updateSalesWithWay);
 router.post('/createMassivePayment', createMassivePayment);
 router.get('/getPayments/:id', getPayments);
 router.post('/updateCashPayment', updateCashPayment);
+router.get('/getPayment/:id', getPayment);
+router.post('/createPayment', createPayment);
 
 //Beneficiaries
 router.get('/getBeneficiary/:id', getBeneficiary);
@@ -149,9 +151,6 @@ router.get('/financings', getFinancings);
 router.get('/getContract/:id', getContract);
 router.post('/createContract', createContract);
 router.post('/updateContract', updateContract);
-
-//Payment
-router.get('/getPayment/:id', getPayment);
 
 //Request
 router.get('/getRequest/:id', getRequest);
@@ -212,6 +211,7 @@ router.post('/insertMassiveSalesWays', insertMassiveSalesWays);
 router.post('/deleteSalesWays', deleteSalesWays);
 router.get('/getLastOrder/:id', getLastOrder);
 router.post('/substractOrder', substractOrder);
+router.get('/getCompleteWay/:id', getCompleteWay);
 
 //Departments
 router.get('/departments', getDepartments);
