@@ -191,8 +191,8 @@ const getCompanyData = async (req, res) => {
 
 const updateCompanyData = async (req, res) => {
     //nombre 	correo 	telefono 	direccion 	ayudaTelefono 	ayudaCorreo 	ayudaNombre 	
-    const { nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre } = req.body;
-    const response = await connection.query(`UPDATE empresa SET nombre = '${nombre}', correo = '${correo}', telefono = '${telefono}', direccion = '${direccion}', ayudaTelefono = '${ayudaTelefono}', ayudaCorreo = '${ayudaCorreo}', ayudaNombre = '${ayudaNombre}'`, function (err, rows) {
+    const { nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre, estado, pais, web } = req.body;
+    const response = await connection.query(`UPDATE empresa SET nombre = '${nombre}', estado = '${estado}', pais = '${pais}', web = '${web}', correo = '${correo}', telefono = '${telefono}', direccion = '${direccion}', ayudaTelefono = '${ayudaTelefono}', ayudaCorreo = '${ayudaCorreo}', ayudaNombre = '${ayudaNombre}'`, function (err, rows) {
         if (rows) {
             res.status(200).send({ message: 'Datos actualizados correctamente', success: true });
         } else {
@@ -203,8 +203,8 @@ const updateCompanyData = async (req, res) => {
 
 const createCompanyData = async (req, res) => {
     //nombre 	correo 	telefono 	direccion 	ayudaTelefono 	ayudaCorreo 	ayudaNombre
-    const { nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre } = req.body;
-    const response = await connection.query(`INSERT INTO empresa (nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre) VALUES ('${nombre}', '${correo}', '${telefono}', '${direccion}', '${ayudaTelefono}', '${ayudaCorreo}', '${ayudaNombre}')`, function (err, rows) {
+    const { nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre, estado, pais, web } = req.body;
+    const response = await connection.query(`INSERT INTO empresa (nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre, estado, pais, web) VALUES ('${nombre}', '${correo}', '${telefono}', '${direccion}', '${ayudaTelefono}', '${ayudaCorreo}', '${ayudaNombre}, '${estado}', '${pais}', '${web}')`, function (err, rows) {
         if (rows) {
             res.status(200).send({ message: 'Datos actualizados correctamente', success: true });
         } else {
