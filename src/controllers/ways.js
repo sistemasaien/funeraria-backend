@@ -144,9 +144,9 @@ const substractOrder = async (req, res) => {
 
 const getCompleteWay = async (req, res) => {
     const { id } = req.params;
-    const query = `SELECT nombre_cliente, direccion_cliente, fecha, valor, orden, id_venta, id_cuota, importePendiente, id_contrato, id_cliente, periodo, nroCuota, importeAbonado, importeTotal
+    const query = `SELECT nombre_cliente, direccion_cliente, fecha, valor, orden, id_venta, id_cuota, importePendiente, id_contrato, id_cliente, periodo, nroCuota, importeAbonado, importeTotal, numeroPagos
     FROM (
-      SELECT c.nombre AS nombre_cliente, c.domicilio AS direccion_cliente, c.id AS id_cliente, co.fecha, co.valor, rv.orden, v.id AS id_venta, co.id AS id_cuota, co.nroCuota, f.periodo, f.importePendiente, f.idContrato AS id_contrato, f.importeAbonado, f.importeTotal,
+      SELECT c.nombre AS nombre_cliente, c.domicilio AS direccion_cliente, c.id AS id_cliente, co.fecha, co.valor, rv.orden, v.id AS id_venta, co.id AS id_cuota, co.nroCuota, f.periodo, f.importePendiente, f.idContrato AS id_contrato, f.importeAbonado, f.importeTotal, f.numeroPagos,
              ROW_NUMBER() OVER (PARTITION BY v.id ORDER BY co.fecha ASC) AS row_num
       FROM clientes c
       JOIN ventas v ON c.id = v.idCliente
