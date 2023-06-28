@@ -70,10 +70,27 @@ const deleteClient = async (req, res) => {
     });
 }
 
+const getClientByNameAndBirthDate = async (req, res) => {
+    const { nombre, fechaNacimiento } = req.body;
+    const response = await connection.query(`SELECT * FROM clientes WHERE nombre = '${nombre}' AND fechaNacimiento = '${fechaNacimiento}'`, function (err, rows) {
+        if (err) {
+            res.status(409).send(err);
+        } else {
+            if (rows?.length > 0) {
+                res.status(200).send({ success: true, clientId: rows[0] });
+            } else {
+                res.status(200).send({ message: 'No se encontró el cliente', success: false });
+            }
+        }
+    });
+}
+
+
 module.exports = {
     getClients,
     getClient,
     updateClient,
     createClient,
-    deleteClient
+    deleteClient,
+    getClientByNameAndBirthDate
 }

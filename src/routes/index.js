@@ -11,7 +11,7 @@ const upload = multer({
 
 const router = Router();
 const { getLogo, genericGet, genericDelete, genericUpdate, createProfile, getCompanyData, updateCompanyData, createCompanyData, uploadLogo, deleteContract, getProfiles, updatePermissions, getUserPermissions, getPermissionsByProfile, deleteRequest, login, register, getRequests, insertRequest } = require('../controllers');
-const { getClients, getClient, updateClient, createClient, deleteClient } = require('../controllers/clients');
+const { getClients, getClient, updateClient, createClient, deleteClient, getClientByNameAndBirthDate } = require('../controllers/clients');
 const { getEmployees, getEmployee, updateEmployee, createEmployee, deleteEmployee, updateEmployeesWay } = require('../controllers/employees');
 const { getUsers, getUser, updateUser, createUser, deleteUser } = require('../controllers/users');
 const { getPacks, getPack, updatePack, createPack, deletePack } = require('../controllers/packs');
@@ -105,6 +105,7 @@ router.get('/getClient/:id', getClient);
 router.post('/updateClient', updateClient);
 router.post('/createClient', createClient);
 router.post('/deleteClient', deleteClient);
+router.post('/getClientByNameAndBirthDate', getClientByNameAndBirthDate);
 
 //Employees
 router.get('/employees', getEmployees);
