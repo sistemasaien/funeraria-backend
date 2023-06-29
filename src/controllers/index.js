@@ -182,7 +182,7 @@ const getLogo = async (req, res) => {
 const getCompanyData = async (req, res) => {
     const response = await connection.query('SELECT * FROM empresa', function (err, rows) {
         if (rows) {
-            res.status(200).send(rows);
+            res.status(200).send(rows[0]);
         } else {
             res.status(200).send({ message: 'Ocurrió un error', success: false });
         }
