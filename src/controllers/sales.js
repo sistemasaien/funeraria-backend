@@ -404,7 +404,7 @@ const getContracts = async (req, res) => {
 
 const createContract = async (req, res) => {
     const { idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia } = req.body;
-    const response = await connection.query(`INSERT INTO contratos (idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia) VALUES ('${idCliente}', '${idFinanciamiento}', '${idSolicitud}', '${idPaquete}', '${fecha}', '${tipo}', '${asesor}', '${estado}', '${impMunicipal}', '${traslado}', '${exhumacion}', '${otros}', '${observaciones}', '${referencia})`, async function (err, rows) {
+    const response = await connection.query(`INSERT INTO contratos (idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia) VALUES ('${idCliente}', '${idFinanciamiento}', '${idSolicitud}', '${idPaquete}', '${fecha}', '${tipo}', '${asesor}', '${estado}', '${impMunicipal}', '${traslado}', '${exhumacion}', '${otros}', '${observaciones}', '${referencia}')`, async function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -419,7 +419,7 @@ const createContract = async (req, res) => {
 
 const updateContract = async (req, res) => {
     const { id, idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia } = req.body;
-    const response = await connection.query(`UPDATE contratos SET idCliente = '${idCliente}', idFinanciamiento = '${idFinanciamiento}', idSolicitud = '${idSolicitud}', idPaquete = '${idPaquete}', fecha = '${fecha}', tipo = '${tipo}', asesor = '${asesor}', estado = '${estado}', impMunicipal = '${impMunicipal}', traslado = '${traslado}', exhumacion = '${exhumacion}', otros = '${otros}', observaciones = '${observaciones}', referencia = '${referencia} WHERE id = ${id}`, function (err, rows) {
+    const response = await connection.query(`UPDATE contratos SET idCliente = '${idCliente}', idFinanciamiento = '${idFinanciamiento}', idSolicitud = '${idSolicitud}', idPaquete = '${idPaquete}', fecha = '${fecha}', tipo = '${tipo}', asesor = '${asesor}', estado = '${estado}', impMunicipal = '${impMunicipal}', traslado = '${traslado}', exhumacion = '${exhumacion}', otros = '${otros}', observaciones = '${observaciones}', referencia = '${referencia}' WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
