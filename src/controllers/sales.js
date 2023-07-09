@@ -173,7 +173,8 @@ const createFinancing = async (req, res) => {
     const { idCliente, medioPago, precioBase, bonificacion, enganche, montoFinanciado, numeroPagos, interesMora, periodo, importeCuota, importeTotal, importePendiente, importeAbonado, fechaPrimerCuota, fechaUltimaCuota } = req.body;
     const atraso = req.body?.atraso;
     const adelanto = req.body?.adelanto;
-    const response = await connection.query(`INSERT INTO financiamientos (idCliente, medioPago, precioBase, bonificacion, enganche, montoFinanciado, numeroPagos, interesMora, periodo, importeCuota, importeTotal, importePendiente, importeAbonado, atraso, adelanto, fechaPrimerCuota, fechaUltimaCuota) VALUES ('${idCliente}', '${medioPago}', '${precioBase}', '${bonificacion}', '${enganche}', '${montoFinanciado}', '${numeroPagos}', '${interesMora}', '${periodo}', '${importeCuota}', '${importeTotal}', '${importePendiente}', '${importeAbonado}', '${atraso}', '${adelanto}', '${fechaPrimerCuota}', '${fechaUltimaCuota}')`, async function (err, rows) {
+    const activo = req.body?.activo === 'NO' ? 'NO' : 'SI';
+    const response = await connection.query(`INSERT INTO financiamientos (idCliente, medioPago, precioBase, bonificacion, enganche, montoFinanciado, numeroPagos, interesMora, periodo, importeCuota, importeTotal, importePendiente, importeAbonado, atraso, adelanto, fechaPrimerCuota, fechaUltimaCuota, activo) VALUES ('${idCliente}', '${medioPago}', '${precioBase}', '${bonificacion}', '${enganche}', '${montoFinanciado}', '${numeroPagos}', '${interesMora}', '${periodo}', '${importeCuota}', '${importeTotal}', '${importePendiente}', '${importeAbonado}', '${atraso}', '${adelanto}', '${fechaPrimerCuota}', '${fechaUltimaCuota}', '${activo})`, async function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
