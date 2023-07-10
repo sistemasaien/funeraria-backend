@@ -54,7 +54,7 @@ const createEmployee = async (req, res) => {
             res.status(409).send(err);
         } else {
             if (rows?.affectedRows > 0) {
-                res.status(200).send({ message: 'Empleado creado correctamente', success: true });
+                res.status(200).send({ message: 'Empleado creado correctamente', success: true, insertedId: rows.insertId });
             } else {
                 res.status(200).send({ message: 'Ocurrió un error', success: false });
             }
