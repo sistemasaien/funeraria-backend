@@ -2,6 +2,7 @@ const mysql = require('mysql');
 const path = require('path');
 const sharp = require('sharp');
 const connection = require('../controllers/database');
+const { getInsertSentence, getUpdateSentence } = require('../utils');
 
 const register = async (req, res) => {
     const { username, password, phone, mail, name } = req.body;
@@ -191,8 +192,9 @@ const getCompanyData = async (req, res) => {
 
 const updateCompanyData = async (req, res) => {
     //nombre 	correo 	telefono 	direccion 	ayudaTelefono 	ayudaCorreo 	ayudaNombre 	
-    const { nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre, estado, pais, web } = req.body;
-    const response = await connection.query(`UPDATE empresa SET nombre = '${nombre}', estado = '${estado}', pais = '${pais}', web = '${web}', correo = '${correo}', telefono = '${telefono}', direccion = '${direccion}', ayudaTelefono = '${ayudaTelefono}', ayudaCorreo = '${ayudaCorreo}', ayudaNombre = '${ayudaNombre}'`, function (err, rows) {
+    let query = getUpdateSentence('empresa', req.body);
+
+    const response = await connection.query(query, function (err, rows) {
         if (rows) {
             res.status(200).send({ message: 'Datos actualizados correctamente', success: true });
         } else {
@@ -203,20 +205,14 @@ const updateCompanyData = async (req, res) => {
 
 const createCompanyData = async (req, res) => {
     //nombre 	correo 	telefono 	direccion 	ayudaTelefono 	ayudaCorreo 	ayudaNombre
-    let nombre = req.body?.nombre || '';
-    let correo = req.body?.correo || '';
-    let telefono = req.body?.telefono || '';
-    let direccion = req.body?.direccion || '';
-    let ayudaTelefono = req.body?.ayudaTelefono || '';
-    let ayudaCorreo = req.body?.ayudaCorreo || '';
-    let ayudaNombre = req.body?.ayudaNombre || '';
-    let estado = req.body?.estado || '';
-    let pais = req.body?.pais || '';
-    let web = req.body?.web || '';
-    const response = await connection.query(`INSERT INTO empresa (nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre, estado, pais, web) VALUES ('${nombre}', '${correo}', '${telefono}', '${direccion}', '${ayudaTelefono}', '${ayudaCorreo}', '${ayudaNombre}, '${estado}', '${pais}', '${web}')`, function (err, rows) {
+    let query = getInsertSentence('empresa', req.body);
+
+    const response = await connection.query(query, function (err, rows) {
         if (rows) {
             res.status(200).send({ message: 'Datos actualizados correctamente', success: true });
         } else {
+            console.log(err)
+            console.log(`INSERT INTO empresa (nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre, estado, pais, web) VALUES ('${nombre}', '${correo}', '${telefono}', '${direccion}', '${ayudaTelefono}', '${ayudaCorreo}', '${ayudaNombre}, '${estado}', '${pais}', '${web}')`)
             res.status(200).send({ message: 'Ocurrió un error', success: false });
         }
     });
