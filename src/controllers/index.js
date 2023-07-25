@@ -203,7 +203,16 @@ const updateCompanyData = async (req, res) => {
 
 const createCompanyData = async (req, res) => {
     //nombre 	correo 	telefono 	direccion 	ayudaTelefono 	ayudaCorreo 	ayudaNombre
-    const { nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre, estado, pais, web } = req.body;
+    let nombre = req.body?.nombre || '';
+    let correo = req.body?.correo || '';
+    let telefono = req.body?.telefono || '';
+    let direccion = req.body?.direccion || '';
+    let ayudaTelefono = req.body?.ayudaTelefono || '';
+    let ayudaCorreo = req.body?.ayudaCorreo || '';
+    let ayudaNombre = req.body?.ayudaNombre || '';
+    let estado = req.body?.estado || '';
+    let pais = req.body?.pais || '';
+    let web = req.body?.web || '';
     const response = await connection.query(`INSERT INTO empresa (nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre, estado, pais, web) VALUES ('${nombre}', '${correo}', '${telefono}', '${direccion}', '${ayudaTelefono}', '${ayudaCorreo}', '${ayudaNombre}, '${estado}', '${pais}', '${web}')`, function (err, rows) {
         if (rows) {
             res.status(200).send({ message: 'Datos actualizados correctamente', success: true });
