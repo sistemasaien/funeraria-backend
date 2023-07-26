@@ -678,7 +678,9 @@ const updateSalesWithWay = async (req, res) => {
 const createPayment = async (req, res) => {
     const { id, fecha, valor, importePago, observacion, importePendiente, idContrato, importeAbonado, atraso } = req.body;
     let importePendienteCuota = valor - importePago;
+    if (importePendienteCuota < 0) importePendienteCuota = 0;
     let nuevoImportePendiente = importePendiente - importePago;
+    if (nuevoImportePendiente < 0) nuevoImportePendiente = 0;
     let nuevoImporteAbonado = importeAbonado + importePago;
     const queryPago = `UPDATE cobranzas SET importePago = ${importePago}, importePendiente = ${importePendienteCuota}, estado = 'Pagado', fechaPago = '${fecha}', observaciones = '${observacion}' WHERE id = ${id}`;
     let queryFinanciamiento = '';
@@ -729,6 +731,21 @@ const createPayment = async (req, res) => {
     }
 }
 
+const getLastPendingPayment = async (req, res) => {
+    const { id } = req.params;
+    const response = await connection.query(`SELECT * FROM cobranzas WHERE idFinanciamiento = ${id} AND estado = 'Pendiente' ORDER BY nroCuota ASC LIMIT 1`, async function (err, rows) {
+        if (err) {
+            res.status(409).send(err);
+        } else {
+            if (rows?.length > 0) {
+                res.status(200).send(rows[0]);
+            } else {
+                res.status(200).send({ message: 'No se encontró la cuota', success: false });
+            }
+        }
+    });
+}
+
 
 
 module.exports = {
@@ -770,7 +787,8 @@ module.exports = {
     getCompleteContract,
     updateSalesWithWay,
     updateCashPayment,
-    createPayment
+    createPayment,
+    getLastPendingPayment
 }
 
 

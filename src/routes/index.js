@@ -53,7 +53,8 @@ const { updateContractNumber,
     getCompleteContract,
     updateSalesWithWay,
     updateCashPayment,
-    createPayment
+    createPayment,
+    getLastPendingPayment
 } = require('../controllers/sales');
 
 const { importData, getLastId } = require('../controllers/imports');
@@ -135,6 +136,7 @@ router.get('/getPayments/:id', getPayments);
 router.post('/updateCashPayment', updateCashPayment);
 router.get('/getPayment/:id', getPayment);
 router.post('/createPayment', createPayment);
+router.get('/getLastPendingPayment/:id', getLastPendingPayment);
 
 //Beneficiaries
 router.get('/getBeneficiary/:id', getBeneficiary);
