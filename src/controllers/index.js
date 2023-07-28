@@ -3,10 +3,12 @@ const path = require('path');
 const sharp = require('sharp');
 const connection = require('../controllers/database');
 const { getInsertSentence, getUpdateSentence } = require('../utils');
+const bcrypt = require('bcrypt');
 
 const register = async (req, res) => {
     const { username, password, phone, mail, name } = req.body;
-    const response = await connection.query(`INSERT INTO users (username, password, role, phone, mail, name) VALUES ('${username}', '${password}', ${2}, '${phone}', '${mail}', '${name}')`, function (err, rows) {
+    const hash = bcrypt.hashSync(password, 10);
+    const response = await connection.query(`INSERT INTO users (username, password, role, phone, mail, name) VALUES ('${username}', '${hash}', ${2}, '${phone}', '${mail}', '${name}')`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -21,13 +23,18 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     const { username, password } = req.body;
-    await connection.query(`SELECT id, usuario, perfil, nombre, email FROM usuarios where usuario = '${username}' and password= '${password}'`, function (err, rows) {
+    await connection.query(`SELECT id, usuario, perfil, nombre, email, password FROM usuarios where usuario = '${username}'`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
             if (rows?.length > 0) {
                 user = rows[0];
-                res.status(200).send({ message: 'Usuario logueado correctamente', success: true, user });
+                if (bcrypt.compareSync(password, user.password)) {
+                    delete user.password;
+                    res.status(200).send({ message: 'Usuario logueado correctamente', success: true, user });
+                } else {
+                    res.status(200).send({ message: 'Usuario o contraseña incorrectos', success: false });
+                }
             } else {
                 res.status(200).send({ message: 'Usuario o contraseña incorrectos', success: false });
             }
