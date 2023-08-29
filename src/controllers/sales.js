@@ -644,7 +644,6 @@ const updateFinishDate = async (req, res) => {
 }
 
 const getCompleteContract = async (req, res) => {
-    console.log('LLEGO AQUI');
     const { id } = req.params;
     const response = await connection.query(`SELECT con.*, cl.*, sol.*, ser.*
 	FROM contratos con

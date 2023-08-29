@@ -218,8 +218,6 @@ const createCompanyData = async (req, res) => {
         if (rows) {
             res.status(200).send({ message: 'Datos actualizados correctamente', success: true });
         } else {
-            console.log(err)
-            console.log(`INSERT INTO empresa (nombre, correo, telefono, direccion, ayudaTelefono, ayudaCorreo, ayudaNombre, estado, pais, web, ciudad, RFC, domicilioFiscal, ciudadFiscal, municipioFiscal, telefonoFiscal, nombreFiscal, estadoFiscal, ciudadJurisdiccion, estadoJurisdiccion) VALUES ('${nombre}', '${correo}', '${telefono}', '${direccion}', '${ayudaTelefono}', '${ayudaCorreo}', '${ayudaNombre}, '${estado}', '${pais}', '${web}', '${ciudad}', '${RFC}', '${domicilioFiscal}', '${ciudadFiscal}', '${municipioFiscal}', '${telefonoFiscal}', '${nombreFiscal}', '${estadoFiscal}', '${ciudadJurisdiccion}', '${estadoJurisdiccion}')`)
             res.status(200).send({ message: 'Ocurrió un error', success: false });
         }
     });
