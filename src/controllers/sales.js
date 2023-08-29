@@ -224,8 +224,8 @@ const getDeceased = async (req, res) => {
 }
 
 const createDeceased = async (req, res) => {
-    const { nombre, lugarVelacion, causas, fechaNacimiento, fechaDefuncion, edad, estadoCivil } = req.body;
-    const response = await connection.query(`INSERT INTO fallecidos (nombre, lugarVelacion, causas, fechaNacimiento, fechaDefuncion, edad, estadoCivil) VALUES ('${nombre}', '${lugarVelacion}', '${causas}', '${fechaNacimiento}', '${fechaDefuncion}', '${edad}', '${estadoCivil}')`, async function (err, rows) {
+    const { nombre, lugarVelacion, causas, fechaNacimiento, fechaDefuncion, edad, estadoCivil, lugarDefuncion, lugarRecoleccion } = req.body;
+    const response = await connection.query(`INSERT INTO fallecidos (nombre, lugarVelacion, causas, fechaNacimiento, fechaDefuncion, edad, estadoCivil, lugarDefuncion, lugarRecoleccion) VALUES ('${nombre}', '${lugarVelacion}', '${causas}', '${fechaNacimiento}', '${fechaDefuncion}', '${edad}', '${estadoCivil}', '${lugarDefuncion}', '${lugarRecoleccion}')`, async function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -239,8 +239,8 @@ const createDeceased = async (req, res) => {
 }
 
 const updateDeceased = async (req, res) => {
-    const { id, nombre, lugarVelacion, causas, fechaNacimiento, fechaDefuncion, edad, estadoCivil } = req.body;
-    const response = await connection.query(`UPDATE fallecidos SET nombre = '${nombre}', lugarVelacion = '${lugarVelacion}', causas = '${causas}', fechaNacimiento = '${fechaNacimiento}', fechaDefuncion = '${fechaDefuncion}', edad = '${edad}', estadoCivil = '${estadoCivil}' WHERE id = ${id}`, function (err, rows) {
+    const { id, nombre, lugarVelacion, causas, fechaNacimiento, fechaDefuncion, edad, estadoCivil, lugarDefuncion, lugarRecoleccion } = req.body;
+    const response = await connection.query(`UPDATE fallecidos SET nombre = '${nombre}', lugarVelacion = '${lugarVelacion}', causas = '${causas}', fechaNacimiento = '${fechaNacimiento}', fechaDefuncion = '${fechaDefuncion}', edad = '${edad}', estadoCivil = '${estadoCivil}', lugarDefuncion = '${lugarDefuncion}', lugarRecoleccion = '${lugarRecoleccion}' WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -282,8 +282,8 @@ const getCeremony = async (req, res) => {
 }
 
 const createCeremony = async (req, res) => {
-    const { idFallecido, familia, diaMisa, horaMisa, templo, panteon, novenarios, spotsRadio, esquelasImpresas, publicacionPagina, fotografia } = req.body;
-    const response = await connection.query(`INSERT INTO ceremonias (idFallecido, familia, diaMisa, horaMisa, templo, panteon, novenarios, spotsRadio, esquelasImpresas, publicacionPagina, fotografia) VALUES ('${idFallecido}', '${familia}', '${diaMisa}', '${horaMisa}', '${templo}', '${panteon}', '${novenarios}', '${spotsRadio}', '${esquelasImpresas}', '${publicacionPagina}', '${fotografia}')`, async function (err, rows) {
+    const { idFallecido, familia, diaMisa, horaMisa, templo, panteon, novenarios, spotsRadio, esquelasImpresas, publicacionPagina, fotografia, spotsRedesSociales } = req.body;
+    const response = await connection.query(`INSERT INTO ceremonias (idFallecido, familia, diaMisa, horaMisa, templo, panteon, novenarios, spotsRadio, esquelasImpresas, publicacionPagina, fotografia, spotsRedesSociales) VALUES ('${idFallecido}', '${familia}', '${diaMisa}', '${horaMisa}', '${templo}', '${panteon}', '${novenarios}', '${spotsRadio}', '${esquelasImpresas}', '${publicacionPagina}', '${fotografia}', '${spotsRedesSociales}')`, async function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -297,8 +297,8 @@ const createCeremony = async (req, res) => {
 }
 
 const updateCeremony = async (req, res) => {
-    const { id, idFallecido, familia, diaMisa, horaMisa, templo, panteon, novenarios, spotsRadio, esquelasImpresas, publicacionPagina, fotografia } = req.body;
-    const response = await connection.query(`UPDATE ceremonias SET idFallecido = '${idFallecido}', familia = '${familia}', diaMisa = '${diaMisa}', horaMisa = '${horaMisa}', templo = '${templo}', panteon = '${panteon}', novenarios = '${novenarios}', spotsRadio = '${spotsRadio}', esquelasImpresas = '${esquelasImpresas}', publicacionPagina = '${publicacionPagina}', fotografia = '${fotografia}' WHERE id = ${id}`, function (err, rows) {
+    const { id, idFallecido, familia, diaMisa, horaMisa, templo, panteon, novenarios, spotsRadio, esquelasImpresas, publicacionPagina, fotografia, spotsRedesSociales } = req.body;
+    const response = await connection.query(`UPDATE ceremonias SET idFallecido = '${idFallecido}', familia = '${familia}', diaMisa = '${diaMisa}', horaMisa = '${horaMisa}', templo = '${templo}', panteon = '${panteon}', novenarios = '${novenarios}', spotsRadio = '${spotsRadio}', esquelasImpresas = '${esquelasImpresas}', publicacionPagina = '${publicacionPagina}', fotografia = '${fotografia}', spotsRedesSociales = '${spotsRedesSociales}' WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -404,8 +404,8 @@ const getContracts = async (req, res) => {
 }
 
 const createContract = async (req, res) => {
-    const { idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia } = req.body;
-    const response = await connection.query(`INSERT INTO contratos (idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia) VALUES ('${idCliente}', '${idFinanciamiento}', '${idSolicitud}', '${idPaquete}', '${fecha}', '${tipo}', '${asesor}', '${estado}', '${impMunicipal}', '${traslado}', '${exhumacion}', '${otros}', '${observaciones}', '${referencia}')`, async function (err, rows) {
+    const { idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial } = req.body;
+    const response = await connection.query(`INSERT INTO contratos (idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial) VALUES ('${idCliente}', '${idFinanciamiento}', '${idSolicitud}', '${idPaquete}', '${fecha}', '${tipo}', '${asesor}', '${estado}', '${impMunicipal}', '${traslado}', '${exhumacion}', '${otros}', '${observaciones}', '${referencia}', '${complementarioBasico}', '${paqueteEspecial}')`, async function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -419,8 +419,8 @@ const createContract = async (req, res) => {
 }
 
 const updateContract = async (req, res) => {
-    const { id, idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia } = req.body;
-    const response = await connection.query(`UPDATE contratos SET idCliente = '${idCliente}', idFinanciamiento = '${idFinanciamiento}', idSolicitud = '${idSolicitud}', idPaquete = '${idPaquete}', fecha = '${fecha}', tipo = '${tipo}', asesor = '${asesor}', estado = '${estado}', impMunicipal = '${impMunicipal}', traslado = '${traslado}', exhumacion = '${exhumacion}', otros = '${otros}', observaciones = '${observaciones}', referencia = '${referencia}' WHERE id = ${id}`, function (err, rows) {
+    const { id, idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial } = req.body;
+    const response = await connection.query(`UPDATE contratos SET idCliente = '${idCliente}', idFinanciamiento = '${idFinanciamiento}', idSolicitud = '${idSolicitud}', idPaquete = '${idPaquete}', fecha = '${fecha}', tipo = '${tipo}', asesor = '${asesor}', estado = '${estado}', impMunicipal = '${impMunicipal}', traslado = '${traslado}', exhumacion = '${exhumacion}', otros = '${otros}', observaciones = '${observaciones}', referencia = '${referencia}', complementarioBasico = '${complementarioBasico}', paqueteEspecial = '${paqueteEspecial}' WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {

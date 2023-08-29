@@ -1,7 +1,7 @@
 const { connection } = require('../controllers');
 
 const getClients = async (req, res) => {
-    const response = await connection.query('SELECT * FROM clientes', function (err, rows) {
+    const response = await connection.query('SELECT id, nombre, domicilio, localidad, fechaDesde, telefono, telefonoCobranza FROM clientes', function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {

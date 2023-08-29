@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
+const compression = require('compression');
 require('dotenv').config();
 
 global.__basedir = __dirname;
@@ -10,6 +11,7 @@ global.__basedir = __dirname;
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(compression());
 
 // use it before all route definitions
 app.use(cors({ origin: '*' }));
