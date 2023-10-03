@@ -24,6 +24,7 @@ const createCut = async (req, res) => {
 
     const response = await connection.query(`INSERT INTO cortes (idEmpleado, monto, cantidadCobros, fecha, estado, idsCobros) VALUES ('${idEmpleado}', '${monto}', '${cantidadCobros}', '${datetime}', '${estado}', '${textIdsCobros}')`, function (err, rows) {
         if (err) {
+            console.log(err);
             res.status(409).send(err);
         } else {
             if (rows?.affectedRows > 0) {
