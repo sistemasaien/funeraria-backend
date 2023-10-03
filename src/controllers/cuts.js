@@ -16,6 +16,7 @@ const getCuts = async (req, res) => {
 }
 
 const createCut = async (req, res) => {
+    console.log(req.body)
     const { idEmpleado, monto, cantidadCobros, idsCobros } = req.body;
     const datetime = moment().format('YYYY-MM-DD HH:mm:ss');
     const estado = 'Pendiente';
@@ -64,6 +65,7 @@ const updateCutStatus = async (req, res) => {
 }
 
 const createBreakdownCut = async (req, res) => {
+    console.log(req.body)
     const { breakdowns } = req.body;
     let query = `INSERT INTO cortes_desglose (idCorte, idCuota, monto, fecha, observacion) VALUES`;
 
