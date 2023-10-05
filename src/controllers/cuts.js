@@ -16,6 +16,7 @@ const getCuts = async (req, res) => {
 }
 
 const createCut = async (req, res) => {
+    console.log(req.body)
     const { idEmpleado, monto, cantidadCobros, idsCobros } = req.body;
     const datetime = moment().format('YYYY-MM-DD HH:mm:ss');
     const estado = 'Pendiente';
@@ -23,6 +24,7 @@ const createCut = async (req, res) => {
 
     const response = await connection.query(`INSERT INTO cortes (idEmpleado, monto, cantidadCobros, fecha, estado, idsCobros) VALUES ('${idEmpleado}', '${monto}', '${cantidadCobros}', '${datetime}', '${estado}', '${textIdsCobros}')`, function (err, rows) {
         if (err) {
+            console.log(err);
             res.status(409).send(err);
         } else {
             if (rows?.affectedRows > 0) {
@@ -64,6 +66,7 @@ const updateCutStatus = async (req, res) => {
 }
 
 const createBreakdownCut = async (req, res) => {
+    console.log(req.body)
     const { breakdowns } = req.body;
     let query = `INSERT INTO cortes_desglose (idCorte, idCuota, monto, fecha, observacion) VALUES`;
 
