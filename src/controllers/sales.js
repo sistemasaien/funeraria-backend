@@ -419,8 +419,8 @@ const createContract = async (req, res) => {
 }
 
 const updateContract = async (req, res) => {
-    const { id, idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial } = req.body;
-    const response = await connection.query(`UPDATE contratos SET idCliente = '${idCliente}', idFinanciamiento = '${idFinanciamiento}', idSolicitud = '${idSolicitud}', idPaquete = '${idPaquete}', fecha = '${fecha}', tipo = '${tipo}', asesor = '${asesor}', estado = '${estado}', impMunicipal = '${impMunicipal}', traslado = '${traslado}', exhumacion = '${exhumacion}', otros = '${otros}', observaciones = '${observaciones}', referencia = '${referencia}', complementarioBasico = '${complementarioBasico}', paqueteEspecial = '${paqueteEspecial}' WHERE id = ${id}`, function (err, rows) {
+    const { id, idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial, contratoRelacionado } = req.body;
+    const response = await connection.query(`UPDATE contratos SET idCliente = '${idCliente}', idFinanciamiento = '${idFinanciamiento}', idSolicitud = '${idSolicitud}', idPaquete = '${idPaquete}', fecha = '${fecha}', tipo = '${tipo}', asesor = '${asesor}', estado = '${estado}', impMunicipal = '${impMunicipal}', traslado = '${traslado}', exhumacion = '${exhumacion}', otros = '${otros}', observaciones = '${observaciones}', referencia = '${referencia}', complementarioBasico = '${complementarioBasico}', paqueteEspecial = '${paqueteEspecial}', contratoRelacionado = '${contratoRelacionado}' WHERE id = ${id}`, function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -693,7 +693,7 @@ const createPayment = async (req, res) => {
     }
     queryFinanciamiento = `UPDATE financiamientos SET importeAbonado = ${nuevoImporteAbonado}, importePendiente = ${nuevoImportePendiente}, atraso = ${nuevoAtraso}, fechaUltimoPago = '${fecha}' WHERE idContrato = ${idContrato}`;
     if (importePago >= importePendiente) {
-        const response = await connection.query(`UPDATE contratos SET estado = 'Liquidado' WHERE id = ${idContrato}`, async function (err, rows) {
+        const response = await connection.query(`UPDATE contratos SET estado = 'Pagado' WHERE id = ${idContrato}`, async function (err, rows) {
             if (err) {
                 res.status(409).send(err);
             } else {
@@ -732,7 +732,9 @@ const createPayment = async (req, res) => {
 
 const getLastPendingPayment = async (req, res) => {
     const { id } = req.params;
-    const response = await connection.query(`SELECT * FROM cobranzas WHERE idFinanciamiento = ${id} AND estado = 'Pendiente' ORDER BY nroCuota ASC LIMIT 1`, async function (err, rows) {
+    const response = await connection.query(`SELECT * FROM cobranzas WHERE idFinanciamiento = ${id} AND estado = 'Pendiente'
+     AND id NOT IN(SELECT idCuota FROM pagos_pendientes WHERE estado <> 'CANCELADO')
+     ORDER BY nroCuota ASC LIMIT 1`, async function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
