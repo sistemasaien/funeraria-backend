@@ -153,6 +153,21 @@ const deletePendingPayment = async (req, res) => {
     });
 }
 
+const updateBreakdownCutPayments = async (req, res) => {
+    const { idCorte, estado } = req.body;
+    const response = await connection.query(`UPDATE cortes_desglose SET estado = '${estado}' WHERE idCorte = ${idCorte}`, function (err, rows) {
+        if (err) {
+            res.status(409).send(err);
+        } else {
+            if (rows?.affectedRows > 0) {
+                res.status(200).send({ message: 'Detalle de corte actualizado correctamente', success: true });
+            } else {
+                res.status(200).send({ message: 'Ocurrió un error', success: false });
+            }
+        }
+    });
+}
+
 const getPendingPayments = async (req, res) => {
     const response = await connection.query(`
         SELECT pp.*, f.idContrato, f.idCliente, c.nombre, c.domicilioCobranza, e.nombre as nombreEmpleado 
@@ -209,7 +224,7 @@ const updateBreakdownCut = async (req, res) => {
 
 const getBreakdownCuts = async (req, res) => {
     const { id } = req.params;
-    const response = await connection.query(`SELECT cg.*, c.valor, cl.nombre, f.importePendiente, f.atraso, f.importeAbonado, f.idContrato, f.importePendiente, (f.importePendiente - cg.monto) as nuevoImportePendiente FROM cortes_desglose cg, financiamientos f, clientes cl, cobranzas c
+    const response = await connection.query(`SELECT cg.*, c.valor, cl.nombre, f.importePendiente, f.periodo, c.nroCuota, f.numeroPagos, f.medioPago, f.montoFinanciado, f.atraso, f.importeAbonado, f.idContrato, f.importePendiente, (f.importePendiente - cg.monto) as nuevoImportePendiente FROM cortes_desglose cg, financiamientos f, clientes cl, cobranzas c
     WHERE cg.idCuota = c.id
     AND c.idFinanciamiento = f.id 
     AND f.idCliente = cl.id
@@ -260,5 +275,6 @@ module.exports = {
     cleanPendingPayments,
     getPendingPayments,
     deletePendingPayment,
-    getPendingPaymentDetail
+    getPendingPaymentDetail,
+    updateBreakdownCutPayments
 }

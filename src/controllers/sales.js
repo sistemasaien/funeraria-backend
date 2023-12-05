@@ -404,8 +404,8 @@ const getContracts = async (req, res) => {
 }
 
 const createContract = async (req, res) => {
-    const { idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial } = req.body;
-    const response = await connection.query(`INSERT INTO contratos (idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial) VALUES ('${idCliente}', '${idFinanciamiento}', '${idSolicitud}', '${idPaquete}', '${fecha}', '${tipo}', '${asesor}', '${estado}', '${impMunicipal}', '${traslado}', '${exhumacion}', '${otros}', '${observaciones}', '${referencia}', '${complementarioBasico}', '${paqueteEspecial}')`, async function (err, rows) {
+    const { idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial, contratoRelacionado } = req.body;
+    const response = await connection.query(`INSERT INTO contratos (idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial, contratoRelacionado) VALUES ('${idCliente}', '${idFinanciamiento}', '${idSolicitud}', '${idPaquete}', '${fecha}', '${tipo}', '${asesor}', '${estado}', '${impMunicipal}', '${traslado}', '${exhumacion}', '${otros}', '${observaciones}', '${referencia}', '${complementarioBasico}', '${paqueteEspecial}', '${contratoRelacionado}')`, async function (err, rows) {
         if (err) {
             res.status(409).send(err);
         } else {
@@ -733,7 +733,7 @@ const createPayment = async (req, res) => {
 const getLastPendingPayment = async (req, res) => {
     const { id } = req.params;
     const response = await connection.query(`SELECT * FROM cobranzas WHERE idFinanciamiento = ${id} AND estado = 'Pendiente'
-     AND id NOT IN(SELECT idCuota FROM pagos_pendientes WHERE estado <> 'CANCELADO')
+     AND id NOT IN(SELECT idCuota FROM pagos_pendientes WHERE estado = 'PENDIENTE' OR estado = 'Pendiente')
      ORDER BY nroCuota ASC LIMIT 1`, async function (err, rows) {
         if (err) {
             res.status(409).send(err);

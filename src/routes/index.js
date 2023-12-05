@@ -64,7 +64,7 @@ const { getCalls, createCall, getCallsByEmployee, getCallsByEmployeeAndType } = 
 const { getWays, getCompleteWay, getWay, updateWay, createWay, deleteWay, deleteSalesWays, insertMassiveSalesWays, createSalesWays, getLastOrder, substractOrder, getEmployeesWays, getEmployeeWays } = require('../controllers/ways');
 const { getDepartment, getDepartments, updateDepartment, createDepartment, deleteDepartment } = require('../controllers/departments');
 const { getCuts, getCut, createCut, updateCutStatus, createBreakdownCut, deleteBreakdownCut, updateBreakdownCut, getBreakdownCuts, createPendingPayment,
-    updatePendingPaymentStatus, cleanPendingPayments, getPendingPayments, deletePendingPayment, getPendingPaymentDetail } = require('../controllers/cuts');
+    updatePendingPaymentStatus, cleanPendingPayments, getPendingPayments, deletePendingPayment, getPendingPaymentDetail, updateBreakdownCutPayments } = require('../controllers/cuts');
 
 //Generic
 router.post('/genericDelete', genericDelete);
@@ -245,6 +245,7 @@ router.post('/cleanPendingPayments', cleanPendingPayments);
 router.get('/getPendingPayments', getPendingPayments);
 router.post('/deletePendingPayment', deletePendingPayment);
 router.post('/getPendingPaymentDetail', getPendingPaymentDetail)
+router.post('/updateBreakdownCutPayments', updateBreakdownCutPayments)
 
 
 module.exports = router;
