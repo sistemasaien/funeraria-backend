@@ -438,10 +438,11 @@ const updateContract = async (req, res) => {
 
 const getSales = async (req, res) => {
     const response = await connection.query(`
-        SELECT v.id, c.nombre as cliente, v.idCliente, v.idContrato, v.estado, e.nombre as asesor, e2.nombre as cobrador, v.metodoPago, v.fechaLiquidacion, v.recorrido FROM ventas v
+        SELECT v.id, c.nombre as cliente, v.idCliente, v.idContrato, v.estado, e.nombre as asesor, e2.nombre as cobrador, v.metodoPago, v.fechaLiquidacion, v.recorrido, co.estado as estadoContrato FROM ventas v
         LEFT JOIN clientes c ON v.idCliente = c.id 
         LEFT JOIN empleados e ON v.asesor = e.id
-        LEFT JOIN empleados e2 ON v.cobrador = e2.id`
+        LEFT JOIN empleados e2 ON v.cobrador = e2.id
+        LEFT JOIN contratos co ON v.idContrato = co.id`
         , function (err, rows) {
             if (err) {
                 res.status(409).send(err);
