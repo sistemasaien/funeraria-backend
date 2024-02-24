@@ -66,6 +66,8 @@ const { getDepartment, getDepartments, updateDepartment, createDepartment, delet
 const { getCuts, getCut, createCut, updateCutStatus, createBreakdownCut, deleteBreakdownCut, updateBreakdownCut, getBreakdownCuts, createPendingPayment,
     updatePendingPaymentStatus, cleanPendingPayments, getPendingPayments, deletePendingPayment, getPendingPaymentDetail, updateBreakdownCutPayments } = require('../controllers/cuts');
 
+const { getObituaries, getObituary, updateObituary, createObituary, deleteObituary } = require('../controllers/obituaries');
+
 //Generic
 router.post('/genericDelete', genericDelete);
 router.post('/genericGet', genericGet);
@@ -247,5 +249,11 @@ router.post('/deletePendingPayment', deletePendingPayment);
 router.post('/getPendingPaymentDetail', getPendingPaymentDetail)
 router.post('/updateBreakdownCutPayments', updateBreakdownCutPayments)
 
+//Obituaries
+router.get('/obituaries', getObituaries);
+router.get('/getObituary/:id', getObituary);
+router.post('/updateObituary', updateObituary);
+router.post('/createObituary', createObituary);
+router.post('/deleteObituary', deleteObituary);
 
 module.exports = router;
