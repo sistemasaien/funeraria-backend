@@ -1,0 +1,392 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model beneficiarios {
+  id              Int       @id @default(autoincrement())
+  idContrato      Int?
+  nombre          String?   @db.VarChar(255)
+  telefono        String?   @db.VarChar(20)
+  fechaNacimiento DateTime? @db.Date
+  parentesco      String?   @db.VarChar(50)
+  correo          String?   @db.VarChar(255)
+  domicilio       String?   @db.VarChar(255)
+  codigoPostal    String?   @db.VarChar(10)
+
+  @@index([idContrato], map: "idContrato")
+}
+
+model callcenter {
+  id                 Int       @id @default(autoincrement())
+  idEmpleado         Int?
+  idSucursal         Int
+  tipoLlamada        String?   @db.VarChar(255)
+  fecha              DateTime? @db.DateTime(0)
+  nombre             String?   @db.VarChar(255)
+  domicilio          String?   @db.VarChar(255)
+  telefono           String?   @db.VarChar(255)
+  fechaAgenda        DateTime? @db.Date
+  reporte            String?   @db.Text
+  acuerdo            String?   @db.Text
+  productos          String?   @db.Text
+  seguimiento        String?   @db.Text
+  observaciones      String?   @db.Text
+  motivo             String?   @db.VarChar(255)
+  correo             String?   @db.VarChar(255)
+  asunto             String?   @db.VarChar(255)
+  compromiso         String?   @db.Text
+  nroSolicitud       Int?
+  nombreFallecido    String?   @db.Text
+  lugarFallecimiento String?   @db.Text
+  fechaFallecimiento DateTime? @db.Date
+}
+
+model ceremonias {
+  id                 Int       @id @default(autoincrement())
+  idContrato         Int
+  idFallecido        Int
+  familia            String?   @db.VarChar(255)
+  diaMisa            DateTime? @db.Date
+  horaMisa           String?   @db.Text
+  templo             String?   @db.VarChar(255)
+  panteon            String?   @db.VarChar(255)
+  novenarios         String?   @db.VarChar(255)
+  spotsRadio         String?   @db.VarChar(255)
+  esquelasImpresas   String?   @db.VarChar(255)
+  publicacionPagina  String?   @db.VarChar(255)
+  fotografia         String?   @db.VarChar(255)
+  spotsRedesSociales String?   @db.VarChar(200)
+}
+
+model clientes {
+  id                          Int       @id @default(autoincrement())
+  fechaDesde                  DateTime? @db.Date
+  nombre                      String?   @db.VarChar(100)
+  fechaNacimiento             DateTime  @db.Date
+  domicilio                   String?   @db.VarChar(200)
+  localidad                   String?   @db.VarChar(200)
+  telefono                    String?   @db.VarChar(20)
+  ocupacion                   String?   @db.VarChar(200)
+  municipio                   String?   @db.VarChar(255)
+  estado                      String?   @db.Text
+  codigoPostal                String?   @db.VarChar(10)
+  estadoCivil                 String?   @db.VarChar(255)
+  correo                      String?   @db.VarChar(255)
+  domicilioCobranza           String?   @db.VarChar(255)
+  telefonoCobranza            String?   @db.VarChar(20)
+  referenciaDomicilioCobranza String?   @db.VarChar(255)
+}
+
+model cobranzas {
+  id               Int       @id @default(autoincrement())
+  idFinanciamiento Int
+  nroCuota         Int?
+  fecha            DateTime? @db.Date
+  valor            Decimal   @db.Decimal(10, 2)
+  importePago      Int
+  importePendiente Int
+  tipo             String    @db.Char(8)
+  descripcion      String?   @db.VarChar(200)
+  estado           String    @db.VarChar(20)
+  fechaPago        DateTime? @db.Date
+  observaciones    String?   @db.VarChar(200)
+}
+
+model contratos {
+  id                   Int       @id @default(autoincrement())
+  idCliente            Int
+  idFinanciamiento     Int
+  idSolicitud          Int
+  idPaquete            Int
+  fecha                DateTime? @db.Date
+  tipo                 String?   @db.VarChar(255)
+  asesor               String?   @db.VarChar(255)
+  estado               String?   @db.VarChar(255)
+  impMunicipal         Decimal?  @db.Decimal(10, 2)
+  traslado             String?   @db.VarChar(255)
+  exhumacion           String?   @db.VarChar(255)
+  otros                String?   @db.VarChar(255)
+  observaciones        String?   @db.Text
+  referencia           Int?
+  complementarioBasico String?   @db.VarChar(200)
+  paqueteEspecial      String?   @db.VarChar(200)
+  contratoRelacionado  String?   @db.Text
+}
+
+model cortes {
+  id             Int       @id @default(autoincrement())
+  idEmpleado     Int
+  monto          Decimal   @db.Decimal(10, 2)
+  cantidadCobros Int
+  fecha          DateTime? @db.DateTime(0)
+  estado         String?   @db.Text
+  idsCobros      String?   @db.Text
+  origen         String?   @db.Text
+}
+
+model cortes_desglose {
+  id          Int      @id @default(autoincrement())
+  idCorte     Int
+  idCuota     Int
+  fecha       DateTime @db.Date
+  monto       Decimal  @db.Decimal(10, 2)
+  observacion String   @db.Text
+  estado      String?  @db.Text
+  origen      String?  @db.Text
+}
+
+model departamentos {
+  id          Int    @id @default(autoincrement())
+  nombre      String @db.Text
+  descripcion String @db.Text
+}
+
+model empleados {
+  id                 Int     @id @default(autoincrement())
+  idUsuario          Int
+  nombre             String? @db.VarChar(255)
+  tipo               String? @db.VarChar(255)
+  departamento       String? @db.VarChar(255)
+  sucursal           String? @db.VarChar(255)
+  recorrido          String? @db.VarChar(255)
+  contacto           String? @db.VarChar(255)
+  telefono           String? @db.VarChar(255)
+  telefonoEmergencia String? @db.VarChar(255)
+}
+
+model empresa {
+  id                 Int     @id @default(autoincrement())
+  nombre             String? @db.VarChar(255)
+  correo             String? @db.VarChar(255)
+  telefono           String? @db.VarChar(255)
+  direccion          String? @db.VarChar(255)
+  ayudaTelefono      String? @db.Text
+  ayudaCorreo        String? @db.Text
+  ayudaNombre        String? @db.Text
+  estado             String? @db.Text
+  pais               String? @db.Text
+  web                String? @db.Text
+  ciudad             String? @db.VarChar(200)
+  RFC                String? @db.VarChar(200)
+  domicilioFiscal    String? @db.VarChar(200)
+  ciudadFiscal       String? @db.VarChar(200)
+  municipioFiscal    String? @db.VarChar(200)
+  telefonoFiscal     String? @db.VarChar(200)
+  nombreFiscal       String  @db.VarChar(200)
+  estadoFiscal       String  @db.VarChar(200)
+  ciudadJurisdiccion String? @db.VarChar(200)
+  estadoJurisdiccion String? @db.VarChar(200)
+}
+
+model esquelas {
+  id          Int    @id @default(autoincrement())
+  nombre      String @db.Text
+  descripcion String @db.Text
+  url_view    String @db.Text
+  url_share   String @db.Text
+}
+
+model fallecidos {
+  id               Int       @id @default(autoincrement())
+  idContrato       Int
+  nombre           String    @db.VarChar(255)
+  lugarVelacion    String?   @db.VarChar(255)
+  causas           String?   @db.Text
+  fechaNacimiento  DateTime? @db.Date
+  fechaDefuncion   DateTime? @db.Date
+  edad             Int?
+  estadoCivil      String?   @db.VarChar(255)
+  lugarDefuncion   String?   @db.VarChar(200)
+  lugarRecoleccion String?   @db.VarChar(200)
+}
+
+model financiamientos {
+  id               Int       @id @default(autoincrement())
+  idContrato       Int
+  idCliente        Int
+  medioPago        String?   @db.VarChar(255)
+  precioBase       Decimal?  @db.Decimal(10, 2)
+  bonificacion     Decimal?  @db.Decimal(10, 2)
+  enganche         Decimal?  @db.Decimal(10, 2)
+  montoFinanciado  Decimal?  @db.Decimal(10, 2)
+  numeroPagos      Int?
+  interesMora      Decimal?  @db.Decimal(10, 2)
+  periodo          String?   @db.VarChar(255)
+  importeCuota     Decimal?  @db.Decimal(10, 2)
+  importeTotal     Decimal?  @db.Decimal(10, 2)
+  importePendiente Decimal?  @db.Decimal(10, 2)
+  importeAbonado   Decimal?  @db.Decimal(10, 2)
+  atraso           Decimal?  @db.Decimal(10, 2)
+  adelanto         Decimal?  @db.Decimal(10, 2)
+  fechaPrimerCuota DateTime? @db.Date
+  fechaUltimaCuota DateTime? @db.Date
+  activo           String    @db.VarChar(4)
+  fechaUltimoPago  DateTime? @db.Date
+}
+
+model pagos_pendientes {
+  id          Int      @id @default(autoincrement())
+  idCuota     Int
+  idEmpleado  Int
+  fecha       DateTime @db.DateTime(0)
+  monto       Decimal  @db.Decimal(10, 2)
+  observacion String   @db.Text
+  estado      String   @db.Text
+  origen      String   @db.Text
+}
+
+model paquetes {
+  id            Int      @id @default(autoincrement())
+  nombrePaquete String?  @db.VarChar(255)
+  precioPaquete Decimal? @db.Decimal(10, 2)
+  ataudModelo   String?  @db.VarChar(255)
+  capilla       String?  @db.VarChar(255)
+}
+
+model perfiles {
+  id       Int        @id @default(autoincrement())
+  nombre   String     @unique(map: "nombre") @db.VarChar(255)
+  permisos permisos[]
+}
+
+model permisos {
+  permiso  String   @db.VarChar(255)
+  idPerfil Int
+  tipo     String   @db.Text
+  perfiles perfiles @relation(fields: [idPerfil], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "permisos_ibfk_1")
+
+  @@id([permiso, idPerfil])
+  @@index([idPerfil], map: "idPerfil")
+}
+
+model recorridos {
+  id          Int    @id @default(autoincrement())
+  nombre      String @db.Text
+  descripcion String @db.Text
+}
+
+model recorridos_ventas {
+  idRecorrido Int
+  idVenta     Int
+  orden       Int
+
+  @@id([idRecorrido, idVenta])
+}
+
+model servicios {
+  id             Int     @id @default(autoincrement())
+  embalsamado    String? @db.VarChar(10)
+  urna           String? @db.VarChar(10)
+  especial       String? @db.VarChar(10)
+  encapsulado    String? @db.VarChar(10)
+  nocheAdicional String? @db.VarChar(10)
+  cremacion      String? @db.VarChar(10)
+  extra          String? @db.Text
+}
+
+model solicitudes {
+  id             Int     @id @default(autoincrement())
+  idContrato     Int?
+  idCliente      Int
+  idBeneficiario Int?
+  idFallecido    Int
+  idPaquete      Int?
+  idServicio     Int?
+  idCeremonia    Int?
+  tipo           String? @db.VarChar(255)
+}
+
+model sucursales {
+  id        Int    @id @default(autoincrement())
+  nombre    String @db.Text
+  direccion String @db.Text
+  telefono  String @db.Text
+  correo    String @db.Text
+}
+
+model usuarios {
+  id       Int     @id @default(autoincrement())
+  usuario  String  @unique(map: "usuario") @db.VarChar(255)
+  password String  @db.VarChar(255)
+  perfil   String  @db.VarChar(255)
+  nombre   String? @db.VarChar(255)
+  email    String  @unique(map: "email") @db.VarChar(255)
+}
+
+model ventas {
+  id               Int       @id @default(autoincrement())
+  idCliente        Int?
+  idContrato       Int?
+  idSolicitud      Int?
+  idFinanciamiento Int?
+  estado           String?   @db.VarChar(255)
+  asesor           String?   @db.VarChar(255)
+  cobrador         String?   @db.VarChar(255)
+  recorrido        Int?
+  metodoPago       String?   @db.VarChar(255)
+  fechaLiquidacion DateTime? @db.Date
+
+  @@index([idCliente], map: "idCliente")
+  @@index([idContrato], map: "idContrato")
+  @@index([idFinanciamiento], map: "idFinanciamiento")
+  @@index([idSolicitud], map: "idSolicitud")
+}
+
+model recorridos_empleados {
+  idRecorrido Int
+  idEmpleado  Int
+
+  @@id([idRecorrido, idEmpleado])
+}
+
+model nominas_empleados_detalle {
+  id         Int      @id @default(autoincrement())
+  idEmpleado Int
+  fecha_hora DateTime @db.DateTime(0)
+  tipo       String   @db.Text
+  monto      Decimal  @db.Decimal(10, 2)
+}
+
+model nominas_impresas {
+  id            Int      @id @default(autoincrement())
+  idEmpleado    Int
+  periodicidad  String   @db.Text
+  fechaAnterior DateTime @db.DateTime(0)
+  fecha         DateTime @db.DateTime(0)
+  total         Decimal  @db.Decimal(10, 2)
+}
+
+model nominas_impresas_detalle {
+  id_nomina  Int
+  ordinal    Int
+  monto      Decimal  @db.Decimal(10, 2)
+  fecha_hora DateTime @db.DateTime(0)
+  tipo       String   @db.Text
+
+  @@id([id_nomina, ordinal])
+}
+
+model nominas_perfiles {
+  id           Int     @id @default(autoincrement())
+  descripcion  String  @db.Text
+  sueldoBase   Decimal @db.Decimal(10, 2)
+  periodicidad String  @db.Text
+  comision     Decimal @db.Decimal(10, 2)
+  tipo         String  @db.Text
+}
+
+model nominas_perfiles_paquetes {
+  idPerfil           Int
+  idPaquete          Int
+  porcentaje         Decimal @db.Decimal(10, 2)
+  porcentajeEnganche Decimal @db.Decimal(10, 2)
+  montoFijo          Decimal @db.Decimal(10, 2)
+  montoFijoEnganche  Decimal @db.Decimal(10, 2)
+
+  @@id([idPerfil, idPaquete])
+}
