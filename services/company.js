@@ -13,7 +13,8 @@ const getCompanyData = async () => {
 
 const updateCompanyData = async (sentence) => {
     try {
-        const updatedCompany = await prisma.$queryRaw`${sentence}`
+        console.log(sentence)
+        const updatedCompany = await prisma.$queryRawUnsafe(sentence)
         return updatedCompany
     } catch (error) {
         errors.conflictError('Error al actualizar los datos de la empresa', 'UPDATE_COMPANY_DATA_DB', error)
@@ -22,7 +23,7 @@ const updateCompanyData = async (sentence) => {
 
 const createCompanyData = async (sentence) => {
     try {
-        const newCompany = await prisma.$queryRaw`${sentence}`
+        const newCompany = await prisma.$queryRawUnsafe(sentence)
         return newCompany
     } catch (error) {
         errors.conflictError('Error al crear los datos de la empresa', 'CREATE_COMPANY_DATA_DB', error)
