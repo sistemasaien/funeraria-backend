@@ -47,6 +47,8 @@ const createEmployee = async (req, res, next) => {
         await validateSchema(employeeSchema, req.body)
         const { idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia } = req.body;
         const employee = { idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia };
+        employee.departamento = employee.departamento ? employee.departamento.toString() : ''
+        employee.sucursal = employee.sucursal ? employee.sucursal.toString() : ''
         const newEmployee = await employeesService.createEmployee(employee)
         res.status(200).json(newEmployee)
     } catch (error) {
