@@ -44,11 +44,11 @@ const updateEmployee = async (req, res, next) => {
 
 const createEmployee = async (req, res, next) => {
     try {
-        await validateSchema(employeeSchema, req.body)
-        const { idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia } = req.body;
-        const employee = { idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia };
+        let { idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia } = req.body;
+        let employee = { idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia };
         employee.departamento = employee.departamento ? employee.departamento.toString() : ''
         employee.sucursal = employee.sucursal ? employee.sucursal.toString() : ''
+        await validateSchema(employeeSchema, employee)
         const newEmployee = await employeesService.createEmployee(employee)
         res.status(200).json(newEmployee)
     } catch (error) {
