@@ -39,7 +39,7 @@ const updateUser = async (req, res, next) => {
             id,
             usuario,
             password: hash,
-            perfil,
+            perfil: perfil?.toString() || '',
             nombre,
             email
         };
@@ -63,7 +63,7 @@ const createUser = async (req, res, next) => {
         const user = {
             usuario,
             password: hash,
-            perfil,
+            perfil: perfil?.toString() || '',
             nombre,
             email
         };
