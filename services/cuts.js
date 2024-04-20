@@ -17,6 +17,9 @@ const getCuts = async () => {
 const getCut = async (id) => {
     try {
         const cut = await prisma.$queryRaw`SELECT c.*, e.nombre as nombreEmpleado FROM cortes c, empleados e WHERE c.idEmpleado = e.id AND c.id = ${id}`
+        if (cut?.length === 1) {
+            return cut[0]
+        }
         return cut
     } catch (error) {
         errors.conflictError('Error al obtener el corte', 'GET_CUT_DB', error)
