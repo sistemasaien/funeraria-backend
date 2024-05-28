@@ -13,7 +13,6 @@ const getCompanyData = async () => {
 
 const updateCompanyData = async (sentence) => {
     try {
-        console.log(sentence)
         const updatedCompany = await prisma.$queryRawUnsafe(sentence)
         return updatedCompany
     } catch (error) {

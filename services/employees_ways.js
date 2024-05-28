@@ -12,7 +12,6 @@ const getEmployeesWays = async () => {
 }
 
 const getEmployeeWays = async (id) => {
-    console.log(id)
     try {
         const employeeWays = await prisma.$queryRaw`
         SELECT re.*, r.nombre from recorridos_empleados re, recorridos r 

@@ -90,7 +90,6 @@ const deleteSale = async (req, res, next) => {
 const updateSalesWithWay = async (req, res, next) => {
     try {
         const { ids, way } = req.body;
-        console.log(ids)
         let salesUpdated = await salesService.updateSalesWithWay({ ids, way })
         res.status(200).json(salesUpdated)
     } catch (error) {
@@ -359,7 +358,6 @@ const createCompleteSaleAfterInmediate = async (req, res, next) => {
 const getCompleteSale = async (req, res, next) => {
     const { id } = req.params;
     try {
-        console.time('getCompleteSale');
         const completeSale = {}
         const sale = await salesService.getSale(id)
         if (!sale) {
@@ -391,7 +389,6 @@ const getCompleteSale = async (req, res, next) => {
             ceremony = await ceremoniesService.getCeremony(request.idCeremonia);
             completeSale.ceremony = ceremony;
         }
-        console.timeEnd('getCompleteSale');
         res.status(200).json(completeSale)
     } catch (error) {
         next(error);
@@ -480,8 +477,8 @@ const updateCompleteSale = async (req, res, next) => {
             data.finance.fechaUltimaCuota = fechaUltimaCuota;
             data.finance.adelanto = adelanto;
             data.finance.importeCuota = importeCuota;
+            delete data.finance.tipoCobro;
 
-            console.log(data.finance)
             //Pagos
             data.massivePayment = {}
             data.massivePayment.idFinanciamiento = finance?.id;

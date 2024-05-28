@@ -516,12 +516,28 @@ const updateCompleteSaleWithTransaction = async (data) => {
             })
 
             //Paso 5: actualizar servicio
-            let updatedService = await prismaClient.servicios.update({
-                where: {
-                    id: parseInt(data.service.id)
-                },
-                data: data.service
-            })
+            updatedService = null
+            if (data.service) {
+                updatedService = await prismaClient.servicios.update({
+                    where: {
+                        id: parseInt(data.service.id)
+                    },
+                    data: data.service
+                })
+            } else {
+                let newService = {
+                    embalsamado: "",
+                    urna: "",
+                    especial: "",
+                    encapsulado: "",
+                    nocheAdicional: "",
+                    cremacion: "",
+                    extra: ""
+                }
+                updatedService = await prismaClient.servicios.create({
+                    data: newService
+                })
+            }
 
             let financeData = { ...data.finance }
             delete financeData.updateAvailable

@@ -103,7 +103,6 @@ const importData = async (req, res, next) => {
 const getAllData = async (req, res, next) => {
     let { id } = req.params;
     try {
-        console.time('getAllData');
         let result = await genericsService.getAllData(id);
         let item = result[0];
         let parsedItem = dot.object(item);
@@ -126,7 +125,6 @@ const getAllData = async (req, res, next) => {
             }
         });
 
-        console.timeEnd('getAllData');
         res.status(200).json(parsedItem);
     } catch (error) {
         next(error);

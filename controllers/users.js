@@ -110,7 +110,6 @@ const login = async (req, res, next) => {
         let companyData = null;
         if (platform === "mobile") {
             employeeWays = await employeesWaysService.getEmployeeWays(employee.id)
-            console.log(employeeWays, employee.id)
             companyData = await companyService.getCompanyData();
         }
         let data = {

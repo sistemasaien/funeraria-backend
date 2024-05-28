@@ -29,7 +29,6 @@ function formatDate(date, format) {
 }
 
 function formatDDMMYYYYtoYYYYMMDD(date) {
-    console.log(date)
     return date.split('/').reverse().join('-');
 }
 
