@@ -305,6 +305,7 @@ const createCompleteSaleAfterInmediate = async (req, res, next) => {
         data.finance.importeCuota = importeCuota;
         data.finance.activo = 'SI'
         data.finance.idCliente = oldData?.idCliente;
+        delete data.finance.tipoCobro;
         //Ceremonia
         delete data.ceremony.id;
         data.ceremony.idContrato = 0;
