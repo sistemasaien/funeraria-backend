@@ -15,6 +15,8 @@ const employeeSchema = joi.object({
     contacto: joi.string().optional().allow(''),
     telefono: joi.string().optional().allow(''),
     telefonoEmergencia: joi.string().optional().allow(''),
+    perfilNomina: joi.number().optional().allow(''),
+    ultimoPago: joi.date().optional().allow('').allow(null)
 }).options({ abortEarly: false });
 
 module.exports = employeeSchema;

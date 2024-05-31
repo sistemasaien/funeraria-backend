@@ -3,6 +3,7 @@ const errors = require('../helpers/errors')
 const financingsService = require('../services/financings')
 const contractsService = require('../services/contracts')
 const { addDays } = require('../utils/dateUtils')
+const payrollsController = require('./payrolls')
 
 const getPayments = async (req, res, next) => {
     try {
@@ -44,7 +45,7 @@ const updatePayment = async (req, res, next) => {
     }
 }
 
-const createPaymentUtil = async ({ id, fecha, valor, importePago, observacion, importePendiente, idContrato, importeAbonado, atraso }) => {
+const createPaymentUtil = async ({ id, fecha, valor, importePago, observacion, importePendiente, idContrato, importeAbonado, atraso, idEmpleado }) => {
     let importePendienteCuota = valor - importePago;
     if (importePendienteCuota < 0) importePendienteCuota = 0;
     let nuevoImportePendiente = importePendiente - importePago;
@@ -83,16 +84,25 @@ const createPaymentUtil = async ({ id, fecha, valor, importePago, observacion, i
         contract.fechaPago = new Date(fecha);
         await contractsService.updateContract(contract.id, contract)
     }
-    await paymentsService.updatePayment(id, paymentToUpdate)
 
+    let newPayroll = {
+        idEmpleado: idEmpleado,
+        fecha: new Date(fecha),
+        tipo: 'C',
+        monto: importePago,
+        idPaquete: contract.idPaquete,
+        idContrato: contract.id
+    }
+
+    await payrollsController.createPayrollEmployeeDetail(newPayroll)
+    await paymentsService.updatePayment(id, paymentToUpdate)
     await financingsService.updateFinancing(contract.idFinanciamiento, financingToUpdate)
 }
 
 const createPayment = async (req, res, next) => {
     try {
-        //await validateSchema(paymentSchema, req.body)
-        const { id, fecha, valor, importePago, observacion, importePendiente, idContrato, importeAbonado, atraso } = req.body;
-        await createPaymentUtil({ id, fecha, valor, importePago, observacion, importePendiente, idContrato, importeAbonado, atraso })
+        const { id, fecha, valor, importePago, observacion, importePendiente, idContrato, importeAbonado, atraso, idEmpleado } = req.body;
+        await createPaymentUtil({ id, fecha, valor, importePago, observacion, importePendiente, idContrato, importeAbonado, atraso, idEmpleado })
         res.status(200).send({ message: 'Pago realizado correctamente', success: true });
     } catch (error) {
         next(error);

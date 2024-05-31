@@ -66,12 +66,12 @@ model ceremonias {
 model clientes {
   id                          Int       @id @default(autoincrement())
   fechaDesde                  DateTime? @db.Date
-  nombre                      String?   @db.VarChar(100)
+  nombre                      String?   @db.VarChar(255)
   fechaNacimiento             DateTime  @db.Date
-  domicilio                   String?   @db.VarChar(200)
-  localidad                   String?   @db.VarChar(200)
+  domicilio                   String?   @db.VarChar(255)
+  localidad                   String?   @db.VarChar(255)
   telefono                    String?   @db.VarChar(20)
-  ocupacion                   String?   @db.VarChar(200)
+  ocupacion                   String?   @db.VarChar(255)
   municipio                   String?   @db.VarChar(255)
   estado                      String?   @db.Text
   codigoPostal                String?   @db.VarChar(10)
@@ -90,11 +90,11 @@ model cobranzas {
   valor            Decimal   @db.Decimal(10, 2)
   importePago      Int
   importePendiente Int
-  tipo             String    @db.Char(8)
-  descripcion      String?   @db.VarChar(200)
-  estado           String    @db.VarChar(20)
+  tipo             String    @db.Text
+  descripcion      String?   @db.Text
+  estado           String    @db.Text
   fechaPago        DateTime? @db.Date
-  observaciones    String?   @db.VarChar(200)
+  observaciones    String?   @db.Text
 }
 
 model contratos {
@@ -147,16 +147,18 @@ model departamentos {
 }
 
 model empleados {
-  id                 Int     @id @default(autoincrement())
+  id                 Int       @id @default(autoincrement())
   idUsuario          Int
-  nombre             String? @db.VarChar(255)
-  tipo               String? @db.VarChar(255)
-  departamento       String? @db.VarChar(255)
-  sucursal           String? @db.VarChar(255)
-  recorrido          String? @db.VarChar(255)
-  contacto           String? @db.VarChar(255)
-  telefono           String? @db.VarChar(255)
-  telefonoEmergencia String? @db.VarChar(255)
+  nombre             String?   @db.VarChar(255)
+  tipo               String?   @db.VarChar(255)
+  departamento       String?   @db.VarChar(255)
+  sucursal           String?   @db.VarChar(255)
+  recorrido          String?   @db.VarChar(255)
+  contacto           String?   @db.VarChar(255)
+  telefono           String?   @db.VarChar(255)
+  telefonoEmergencia String?   @db.VarChar(255)
+  perfilNomina       Int?
+  ultimoPago         DateTime? @db.DateTime(0)
 }
 
 model empresa {
@@ -350,6 +352,8 @@ model nominas_empleados_detalle {
   fecha_hora DateTime @db.DateTime(0)
   tipo       String   @db.Text
   monto      Decimal  @db.Decimal(10, 2)
+  idPaquete  Int?
+  idContrato Int?
 }
 
 model nominas_impresas {
@@ -372,12 +376,14 @@ model nominas_impresas_detalle {
 }
 
 model nominas_perfiles {
-  id           Int     @id @default(autoincrement())
-  descripcion  String  @db.Text
-  sueldoBase   Decimal @db.Decimal(10, 2)
-  periodicidad String  @db.Text
-  comision     Decimal @db.Decimal(10, 2)
-  tipo         String  @db.Text
+  id                     Int      @id @default(autoincrement())
+  descripcion            String   @db.Text
+  sueldoBase             Decimal  @db.Decimal(10, 2)
+  periodicidad           String   @db.Text
+  comision               Decimal  @db.Decimal(10, 2)
+  tipo                   String   @db.Text
+  porcentajeBase         Decimal? @db.Decimal(10, 2)
+  porcentajeEngancheBase Decimal? @db.Decimal(10, 2)
 }
 
 model nominas_perfiles_paquetes {

@@ -27,9 +27,11 @@ const getEmployee = async (req, res, next) => {
 
 const updateEmployee = async (req, res, next) => {
     try {
+        let dataToValidate = { ...req.body }
+        dataToValidate.ultimoPago = dataToValidate.ultimoPago ? dataToValidate.ultimoPago : ''
         await validateSchema(employeeSchema, req.body)
-        const { id, idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia } = req.body;
-        const employee = { id, idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia };
+        const { id, idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia, perfilNomina } = req.body;
+        const employee = { id, idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia, perfilNomina };
         const employeeToUpdate = await employeesService.getEmployee(id)
         if (!employeeToUpdate) {
             errors.notFoundError('Empleado no encontrado', 'EMPLOYEE_NOT_FOUND')
@@ -44,8 +46,8 @@ const updateEmployee = async (req, res, next) => {
 
 const createEmployee = async (req, res, next) => {
     try {
-        let { idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia } = req.body;
-        let employee = { idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia };
+        let { idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia, perfilNomina } = req.body;
+        let employee = { idUsuario, nombre, tipo, departamento, sucursal, recorrido, contacto, telefono, telefonoEmergencia, perfilNomina };
         employee.departamento = employee.departamento ? employee.departamento.toString() : ''
         employee.sucursal = employee.sucursal ? employee.sucursal.toString() : ''
         await validateSchema(employeeSchema, employee)

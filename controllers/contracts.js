@@ -46,7 +46,7 @@ const getCompleteContract = async (req, res, next) => {
 
 const updateContract = async (req, res, next) => {
     const { id, idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial, contratoRelacionado } = req.body;
-    const contract = { id, idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial, contratoRelacionado };
+    const contract = { idCliente, idFinanciamiento, idSolicitud, idPaquete, fecha, tipo, asesor, estado, impMunicipal, traslado, exhumacion, otros, observaciones, referencia, complementarioBasico, paqueteEspecial, contratoRelacionado };
     try {
         const contractToUpdate = await contractsService.getContract(id)
         if (!contractToUpdate) {

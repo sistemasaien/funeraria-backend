@@ -117,7 +117,7 @@ const login = async (req, res, next) => {
             permissions,
             employee,
             companyData,
-            employeeWays
+            employeeWays,
         }
         res.status(200).json(data)
     } catch (error) {

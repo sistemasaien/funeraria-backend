@@ -13,6 +13,7 @@ const deceasedsService = require('../services/deceaseds');
 const ceremoniesService = require('../services/ceremonies');
 const packsService = require('../services/packs');
 const dayJS = require('dayjs');
+const payrollsController = require('./payrolls');
 
 const getCompleteSales = async (req, res, next) => {
     try {
@@ -221,19 +222,25 @@ const createCompleteSale = async (req, res, next) => {
 
         data.massivePayment.tipo = sale?.metodoPago === 'Contado' ? 'Contado' : 'Crédito';
         //Fechas si es mobile
-        if (platform === 'mobile') {
-            data.deceased.fechaDefuncion = data.deceased.fechaDefuncion ? dayJS(formatDDMMYYYYtoYYYYMMDD(deceased?.fechaDefuncion)).format() : null;
-            data.deceased.fechaNacimiento = data.deceased.fechaNacimiento ? dayJS(formatDDMMYYYYtoYYYYMMDD(deceased?.fechaNacimiento)).format() : null;
-            data.ceremony.diaMisa = data.ceremony.diaMisa ? dayJS(formatDDMMYYYYtoYYYYMMDD(ceremony?.diaMisa)).format() : null;
-            data.ceremony.fecha = data.ceremony.fecha ? dayJS(formatDDMMYYYYtoYYYYMMDD(ceremony?.fecha)).format() : null;
-            data.massivePayment.fechaInicio = contract?.fecha ? dayJS(formatDDMMYYYYtoYYYYMMDD(contract?.fecha)).format() : null;
-            data.beneficiary.fechaNacimiento = data.beneficiary.fechaNacimiento ? dayJS(formatDDMMYYYYtoYYYYMMDD(beneficiary?.fechaNacimiento)).format() : null;
-            data.client.fechaNacimiento = data.client.fechaNacimiento ? dayJS(formatDDMMYYYYtoYYYYMMDD(client?.fechaNacimiento)).format() : null;
-            delete data.ceremony.fecha;
-        }
+        data.deceased.fechaDefuncion = data.deceased.fechaDefuncion ? dayJS(formatDDMMYYYYtoYYYYMMDD(deceased?.fechaDefuncion)).format() : null;
+        data.deceased.fechaNacimiento = data.deceased.fechaNacimiento ? dayJS(formatDDMMYYYYtoYYYYMMDD(deceased?.fechaNacimiento)).format() : null;
+        data.ceremony.diaMisa = data.ceremony.diaMisa ? dayJS(formatDDMMYYYYtoYYYYMMDD(ceremony?.diaMisa)).format() : null;
+        data.ceremony.fecha = data.ceremony.fecha ? dayJS(formatDDMMYYYYtoYYYYMMDD(ceremony?.fecha)).format() : null;
+        data.massivePayment.fechaInicio = contract?.fecha ? dayJS(formatDDMMYYYYtoYYYYMMDD(contract?.fecha)).format() : null;
+        data.beneficiary.fechaNacimiento = data.beneficiary.fechaNacimiento ? dayJS(formatDDMMYYYYtoYYYYMMDD(beneficiary?.fechaNacimiento)).format() : null;
+        data.client.fechaNacimiento = data.client.fechaNacimiento ? dayJS(formatDDMMYYYYtoYYYYMMDD(client?.fechaNacimiento)).format() : null;
+        delete data.ceremony.fecha;
 
         let createdSale = await salesService.createCompleteSaleWithTransaction(data);
         let updateContractNumber = await salesService.updateDataForCompleteSale({ ...createdSale, inmediate });
+        await payrollsController.createPayrollEmployeeDetail({
+            idEmpleado: createdSale.sale.asesor,
+            fecha: data.contract.fecha,
+            tipo: 'V',
+            monto: enganche,
+            idPaquete: idPaquete,
+            idContrato: createdSale.contract.id
+        })
 
         res.status(200).json({ success: true, message: 'Venta creada correctamente', createdSale });
 
@@ -349,6 +356,14 @@ const createCompleteSaleAfterInmediate = async (req, res, next) => {
 
         let createdSale = await salesService.createCompleteSaleAfterInmediateWithTransaction(data);
         let updateContractNumber = await salesService.updateDataForCompleteSaleAfterInmediate({ createdSale, oldData });
+        await payrollsController.createPayrollEmployeeDetail({
+            idEmpleado: createdSale.sale.asesor,
+            fecha: data.contract.fecha,
+            tipo: 'V',
+            monto: enganche,
+            idPaquete: parseInt(contract?.idPaquete),
+            idContrato: createdSale.contract.id
+        })
         res.status(200).json({ success: true, message: 'Venta creada correctamente', createdSale });
 
     } catch (error) {
@@ -416,9 +431,11 @@ const updateCompleteSale = async (req, res, next) => {
         //Contrato
         data.contract.fecha = new Date(contract?.fecha);
         data.contract.idPaquete = parseInt(contract?.idPaquete);
+        data.contract.asesor = `${sale?.asesor}`;
         //Venta
         data.sale.fechaLiquidacion = metodoPago === 'Contado' ? new Date(data.finance?.fechaPrimerCuota) : new Date(data.finance?.fechaUltimaCuota);
         data.sale.metodoPago = metodoPago;
+        data.sale.asesor = `${sale?.asesor}`;
         //Fallecido
         data.deceased.edad = parseInt(deceased?.edad);
 
@@ -492,6 +509,14 @@ const updateCompleteSale = async (req, res, next) => {
             data.massivePayment.adelanto = adelanto;
             data.massivePayment.fechaInicio = new Date(contract?.fecha);
             data.massivePayment.tipo = sale?.metodoPago === 'Contado' ? 'Contado' : 'Crédito';
+            await payrollsController.createPayrollEmployeeDetail({
+                idEmpleado: parseInt(sale?.asesor),
+                fecha: contract?.fecha,
+                tipo: 'V',
+                monto: enganche,
+                idPaquete: parseInt(contract?.idPaquete),
+                idContrato: parseInt(contract?.id)
+            })
         }
         let updatedSale = await salesService.updateCompleteSaleWithTransaction(data);
         res.status(200).json({ success: true, message: 'Venta actualizada correctamente', updatedSale });

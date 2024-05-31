@@ -31,6 +31,7 @@ const logoRoutes = require('./logo');
 const pendingPaymentsRoutes = require('./pending_payments');
 const filesRoutes = require('./files');
 const logsRoutes = require('./logs');
+const payrollProfilesRoutes = require('./payroll_profiles');
 
 router.use(packsRoutes);
 router.use(branchsRoutes);
@@ -62,5 +63,6 @@ router.use(logoRoutes);
 router.use(pendingPaymentsRoutes);
 router.use(filesRoutes);
 router.use(logsRoutes);
+router.use(payrollProfilesRoutes);
 
 module.exports = router;
