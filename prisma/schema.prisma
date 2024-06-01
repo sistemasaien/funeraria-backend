@@ -357,12 +357,12 @@ model nominas_empleados_detalle {
 }
 
 model nominas_impresas {
-  id            Int      @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   idEmpleado    Int
-  periodicidad  String   @db.Text
-  fechaAnterior DateTime @db.DateTime(0)
-  fecha         DateTime @db.DateTime(0)
-  total         Decimal  @db.Decimal(10, 2)
+  periodicidad  String    @db.Text
+  fechaAnterior DateTime? @db.Date
+  fecha         DateTime  @db.DateTime(0)
+  total         Decimal   @db.Decimal(10, 2)
 }
 
 model nominas_impresas_detalle {
@@ -371,6 +371,8 @@ model nominas_impresas_detalle {
   monto      Decimal  @db.Decimal(10, 2)
   fecha_hora DateTime @db.DateTime(0)
   tipo       String   @db.Text
+  idContrato Int?
+  idPaquete  Int?
 
   @@id([id_nomina, ordinal])
 }

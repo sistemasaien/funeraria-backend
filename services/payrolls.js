@@ -27,10 +27,102 @@ const getSumOfPayrollsDetailByEmployeeAndContract = async (employeeId, contractI
     }
 }
 
+const getPayrollDetailsByEmployeeSinceDate = async (employeeId, date) => {
+    try {
+        const payrollDetails = await prisma.nominas_empleados_detalle.findMany({
+            where: {
+                idEmpleado: parseInt(employeeId),
+                fecha_hora: {
+                    gte: date
+                }
+            }
+        });
+        return payrollDetails;
+    } catch (error) {
+        errors.conflictError('Error al obtener los detalles de nómina para el empleado', 'GET_PAYROLL_DETAILS_BY_EMPLOYEE_SINCE_DATE_DB', error);
+    }
+}
+
+const getPayrollById = async (id) => {
+    try {
+        const payroll = await prisma.$queryRaw`SELECT * FROM nominas_impresas WHERE id = ${id}`
+        return payroll;
+    } catch (error) {
+        errors.conflictError('Error al obtener la nómina', 'GET_PAYROLL_BY_ID_DB', error);
+    }
+}
+
+const getPayrollDetailsById = async (id) => {
+    try {
+        const payrollDetails = await prisma.nominas_impresas_detalle.findMany({
+            where: {
+                id_nomina: parseInt(id)
+            }
+        });
+        return payrollDetails;
+    } catch (error) {
+        errors.conflictError('Error al obtener los detalles de nómina', 'GET_PAYROLL_DETAILS_BY_ID_DB', error);
+    }
+}
+
+const getPayrollsByEmployee = async (employeeId) => {
+    try {
+        const payrolls = await prisma.nominas_impresas.findMany({
+            where: {
+                idEmpleado: parseInt(employeeId)
+            }
+        });
+        return payrolls;
+    } catch (error) {
+        errors.conflictError('Error al obtener las nóminas del empleado', 'GET_PAYROLLS_BY_EMPLOYEE_DB', error);
+    }
+}
+
+const createPayroll = async (payroll) => {
+    try {
+        const newPayroll = await prisma.nominas_impresas.create({
+            data: payroll
+        });
+        return newPayroll;
+    } catch (error) {
+        errors.conflictError('Error al crear la nómina', 'CREATE_PAYROLL_DB', error);
+    }
+}
+
+const createPayrollDetail = async (payrollDetail) => {
+    try {
+        const newPayrollDetail = await prisma.nominas_impresas_detalle.createMany({
+            data: payrollDetail
+        });
+        return newPayrollDetail;
+    } catch (error) {
+        errors.conflictError('Error al crear el detalle de nómina', 'CREATE_PAYROLL_DETAIL_DB', error);
+    }
+}
+
+const getPayrollDetailsByEmployee = async (employeeId) => {
+    try {
+        const payrollDetails = await prisma.nominas_empleados_detalle.findMany({
+            where: {
+                idEmpleado: parseInt(employeeId)
+            }
+        });
+        return payrollDetails;
+    } catch (error) {
+        errors.conflictError('Error al obtener los detalles de nómina', 'GET_PAYROLL_DETAILS_BY_EMPLOYEE_DB', error);
+    }
+}
 
 const payrollsService = {
     createPayrollEmployeeDetail,
-    getSumOfPayrollsDetailByEmployeeAndContract
+    getSumOfPayrollsDetailByEmployeeAndContract,
+    getPayrollDetailsByEmployeeSinceDate,
+    getPayrollById,
+    getPayrollDetailsById,
+    getPayrollsByEmployee,
+    createPayroll,
+    createPayrollDetail,
+    getPayrollDetailsByEmployee
 };
 
 module.exports = payrollsService;
