@@ -113,6 +113,20 @@ const getPayrollDetailsByEmployee = async (employeeId) => {
     }
 }
 
+const getUnprocessedPayrolls = async (employeeId) => {
+    try {
+        const unprocessedPayrolls = await prisma.nominas_empleados_detalle.findMany({
+            where: {
+                idEmpleado: parseInt(employeeId),
+                procesado: 'N'
+            }
+        });
+        return unprocessedPayrolls;
+    } catch (error) {
+        errors.conflictError('Error al obtener las nóminas no procesadas', 'GET_UNPROCESSED_PAYROLLS_DB', error);
+    }
+}
+
 const payrollsService = {
     createPayrollEmployeeDetail,
     getSumOfPayrollsDetailByEmployeeAndContract,
@@ -122,7 +136,8 @@ const payrollsService = {
     getPayrollsByEmployee,
     createPayroll,
     createPayrollDetail,
-    getPayrollDetailsByEmployee
+    getPayrollDetailsByEmployee,
+    getUnprocessedPayrolls
 };
 
 module.exports = payrollsService;

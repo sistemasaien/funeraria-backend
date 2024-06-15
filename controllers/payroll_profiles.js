@@ -25,8 +25,8 @@ const getPayrollProfile = async (req, res, next) => {
 }
 
 const updatePayrollProfile = async (req, res, next) => {
-    const { id, descripcion, sueldoBase, periodicidad, comision, tipo, porcentajeBase, porcentajeEngancheBase } = req.body;
-    const payrollProfile = { descripcion, sueldoBase, periodicidad, comision, tipo, porcentajeBase, porcentajeEngancheBase };
+    const { id, descripcion, sueldoBase, periodicidad, comision, tipo, porcentajeBase, porcentajeEngancheBase, montoFijoBase, montoFijoEngancheBase } = req.body;
+    const payrollProfile = { descripcion, sueldoBase, periodicidad, comision, tipo, porcentajeBase, porcentajeEngancheBase, montoFijoBase, montoFijoEngancheBase };
     try {
 
         const payrollProfileToUpdate = await payrollProfilesService.getPayrollProfile(id)
@@ -43,8 +43,8 @@ const updatePayrollProfile = async (req, res, next) => {
 
 const createPayrollProfile = async (req, res, next) => {
     //descripcion sueldoBase periodicidad(diario, semanal, catorcenal, quincenal, mensual) comision tipo(fijo/variable)
-    const { descripcion, sueldoBase, periodicidad, comision, tipo, porcentajeBase, porcentajeEngancheBase } = req.body;
-    const payrollProfile = { descripcion, sueldoBase, periodicidad, comision, tipo, porcentajeBase, porcentajeEngancheBase };
+    const { descripcion, sueldoBase, periodicidad, comision, tipo, porcentajeBase, porcentajeEngancheBase, montoFijoBase, montoFijoEngancheBase } = req.body;
+    const payrollProfile = { descripcion, sueldoBase, periodicidad, comision, tipo, porcentajeBase, porcentajeEngancheBase, montoFijoBase, montoFijoEngancheBase };
     try {
         const newPayrollProfile = await payrollProfilesService.createPayrollProfile(payrollProfile)
         res.status(200).json(newPayrollProfile)
@@ -95,7 +95,7 @@ const addPackToPayrollProfile = async (req, res, next) => {
             porcentaje: payrollProfile.porcentajeBase,
             porcentajeEnganche: payrollProfile.porcentajeEngancheBase,
             montoFijo: 0,
-            montoFijoEnganche: 0
+            montoFijoEnganche: 0,
         }
 
         const updatedPayrollProfile = await payrollProfilesService.addPayrollProfilePack(item)
@@ -131,8 +131,8 @@ const deletePackOfPayrollProfile = async (req, res, next) => {
 }
 
 const updatePackOfPayrollProfile = async (req, res, next) => {
-    const { idPerfil, idPaquete, porcentaje, porcentajeEnganche, montoFijo, montoFijoEnganche } = req.body;
-    const item = { idPerfil, idPaquete, porcentaje, porcentajeEnganche, montoFijo, montoFijoEnganche };
+    const { idPerfil, idPaquete, porcentaje, porcentajeEnganche, montoFijo, montoFijoEnganche, montoFijoBase, montoFijoEngancheBase } = req.body;
+    const item = { idPerfil, idPaquete, porcentaje, porcentajeEnganche, montoFijo, montoFijoEnganche, montoFijoBase, montoFijoEngancheBase };
     try {
         const payrollProfilePack = await payrollProfilesService.getPayrollByProfileAndPack(idPerfil, idPaquete)
         if (!payrollProfilePack) {

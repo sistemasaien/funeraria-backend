@@ -354,6 +354,7 @@ model nominas_empleados_detalle {
   monto      Decimal  @db.Decimal(10, 2)
   idPaquete  Int?
   idContrato Int?
+  procesado  String?  @db.Text
 }
 
 model nominas_impresas {
@@ -386,6 +387,8 @@ model nominas_perfiles {
   tipo                   String   @db.Text
   porcentajeBase         Decimal? @db.Decimal(10, 2)
   porcentajeEngancheBase Decimal? @db.Decimal(10, 2)
+  montoFijoBase          Decimal? @db.Decimal(10, 2)
+  montoFijoEngancheBase  Decimal? @db.Decimal(10, 2)
 }
 
 model nominas_perfiles_paquetes {
