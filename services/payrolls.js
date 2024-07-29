@@ -118,12 +118,32 @@ const getUnprocessedPayrolls = async (employeeId) => {
         const unprocessedPayrolls = await prisma.nominas_empleados_detalle.findMany({
             where: {
                 idEmpleado: parseInt(employeeId),
-                procesado: 'N'
+                procesado: {
+                    in: ['N', null]
+                }
             }
         });
         return unprocessedPayrolls;
     } catch (error) {
         errors.conflictError('Error al obtener las nóminas no procesadas', 'GET_UNPROCESSED_PAYROLLS_DB', error);
+    }
+}
+
+const updatePayrollsToProcessed = async (ids) => {
+    try {
+        const updatedPayrolls = await prisma.nominas_empleados_detalle.updateMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            },
+            data: {
+                procesado: 'S'
+            }
+        });
+        return updatedPayrolls;
+    } catch (error) {
+        errors.conflictError('Error al actualizar las nóminas a procesadas', 'UPDATE_PAYROLLS_TO_PROCESSED_DB', error);
     }
 }
 
@@ -137,7 +157,8 @@ const payrollsService = {
     createPayroll,
     createPayrollDetail,
     getPayrollDetailsByEmployee,
-    getUnprocessedPayrolls
+    getUnprocessedPayrolls,
+    updatePayrollsToProcessed
 };
 
 module.exports = payrollsService;

@@ -85,10 +85,11 @@ const createPayrollEmployeeDetail = async ({ idEmpleado, fecha, tipo, monto, idP
             tipo,
             monto: payrollDetailValue,
             idPaquete,
-            idContrato
+            idContrato,
+            procesado: 'N'
         }
 
-        const newPayrollEmployeeDetail = await payrollsService.createPayrollEmployeeDetail(payrollEmployeeDetail)
+        await payrollsService.createPayrollEmployeeDetail(payrollEmployeeDetail)
     } catch (error) {
         console.log(error)
     }
@@ -465,6 +466,8 @@ const createPayroll = async (req, res, next) => {
         }
 
         await employeesService.updateEmployee(idEmpleado, newEmployee)
+        const unproccesedPayrollsIds = unproccesedPayrolls.map(payroll => payroll.id);
+        await payrollsService.updatePayrollsToProcessed(unproccesedPayrollsIds);
 
         res.status(200).json(newPayroll)
     } catch (error) {

@@ -232,7 +232,7 @@ const createCompleteSale = async (req, res, next) => {
         delete data.ceremony.fecha;
 
         let createdSale = await salesService.createCompleteSaleWithTransaction(data);
-        let updateContractNumber = await salesService.updateDataForCompleteSale({ ...createdSale, inmediate });
+        await salesService.updateDataForCompleteSale({ ...createdSale, inmediate });
         await payrollsController.createPayrollEmployeeDetail({
             idEmpleado: createdSale.sale.asesor,
             fecha: data.contract.fecha,
