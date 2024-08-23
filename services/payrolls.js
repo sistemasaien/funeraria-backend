@@ -118,9 +118,10 @@ const getUnprocessedPayrolls = async (employeeId) => {
         const unprocessedPayrolls = await prisma.nominas_empleados_detalle.findMany({
             where: {
                 idEmpleado: parseInt(employeeId),
-                procesado: {
-                    in: ['N', null]
-                }
+                OR: [
+                    { procesado: 'N' },
+                    { procesado: null }
+                ]
             }
         });
         return unprocessedPayrolls;
